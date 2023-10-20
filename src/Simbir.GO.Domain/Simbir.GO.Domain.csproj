@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+      <ProjectReference Include="..\Simbir.GO.Shared\Simbir.GO.Shared.csproj" />
+    </ItemGroup>
+
+</Project>

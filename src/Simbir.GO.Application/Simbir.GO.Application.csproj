@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <ItemGroup>
+      <ProjectReference Include="..\Simbir.GO.Domain\Simbir.GO.Domain.csproj" />
+    </ItemGroup>
+
+</Project>

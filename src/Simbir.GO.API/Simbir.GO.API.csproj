@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.4"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Simbir.GO.Application\Simbir.GO.Application.csproj" />
+      <ProjectReference Include="..\Simbir.GO.Infrastructure\Simbir.GO.Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>
