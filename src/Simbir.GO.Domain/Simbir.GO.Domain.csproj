@@ -4,4 +4,8 @@
       <ProjectReference Include="..\Simbir.GO.Shared\Simbir.GO.Shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="GenericServices.StatusGeneric" Version="1.2.0" />
+    </ItemGroup>
+
 </Project>
