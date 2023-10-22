@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Simbir.GO.Application.Interfaces.Persistence;
 using Simbir.GO.Domain.Accounts;
 using Simbir.GO.Domain.Rents;
 using Simbir.GO.Domain.Transports;
 
 namespace Simbir.GO.Infrastructure.Persistence;
 
-public class AppDbContext : DbContext
+public class AppDbContext : DbContext, IAppDbContext
 {
     public DbSet<Account> Accounts { get; set; } = null!;
     public DbSet<Rent> Rents { get; set; } = null!;

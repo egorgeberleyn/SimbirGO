@@ -40,11 +40,34 @@ public class Transport : Entity
         if (!Enum.TryParse<TransportType>(type, true, out var transportType))
             return Result.Fail(new IncorrectTransportTypeError(type));
 
-        var createdCoordinate = Coordinate.Create(latitude: latitude, longitude: longitude);
-        if (createdCoordinate.IsFailed)
-            return Result.Fail(createdCoordinate.Errors[0]);
+        var newCoordinate = Coordinate.Create(latitude: latitude, longitude: longitude);
+        if (newCoordinate.IsFailed)
+            return Result.Fail(newCoordinate.Errors[0]);
 
         return new Transport(ownerId, canBeRented, transportType, model, color, identifier,
-            description, minutePrice, dayPrice, createdCoordinate.Value);
+            description, minutePrice, dayPrice, newCoordinate.Value);
+    }
+    
+    public Result<Transport> Update(bool canBeRented, string type, string model, string color,
+        string identifier, string description, double? minutePrice, double? dayPrice, double latitude, double longitude)
+    {
+        if (!Enum.TryParse<TransportType>(type, true, out var transportType))
+            return Result.Fail(new IncorrectTransportTypeError(type));
+
+        var newCoordinate = Coordinate.Create(latitude: latitude, longitude: longitude);
+        if (newCoordinate.IsFailed)
+            return Result.Fail(newCoordinate.Errors[0]);
+
+        CanBeRented = canBeRented;
+        TransportType = transportType;
+        Model = model;
+        Color = color;
+        Identifier = identifier;
+        Description = description;
+        MinutePrice = minutePrice;
+        DayPrice = dayPrice;
+        Coordinate = newCoordinate.Value;
+
+        return this;
     }
 }
