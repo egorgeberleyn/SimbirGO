@@ -1,9 +1,9 @@
 ﻿using FluentResults;
-using Simbir.GO.Domain.Transports.Enums;
-using Simbir.GO.Domain.Transports.Errors;
+using Simbir.GO.Domain.Rents.Enums;
+using Simbir.GO.Domain.Rents.Errors;
 using Simbir.GO.Shared.Entities;
 
-namespace Simbir.GO.Domain.Transports.Entities;
+namespace Simbir.GO.Domain.Rents;
 
 public class Rent : Entity
 {

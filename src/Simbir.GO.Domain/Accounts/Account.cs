@@ -1,4 +1,5 @@
 ﻿using FluentResults;
+using Simbir.GO.Domain.Accounts.Entities;
 using Simbir.GO.Domain.Accounts.ValueObjects;
 using Simbir.GO.Shared.Entities;
 
@@ -6,10 +7,13 @@ namespace Simbir.GO.Domain.Accounts;
 
 public class Account : Entity
 {
+    private readonly List<AccountRent> _accountRents = new();
+    
     public string Username { get; private set; }
     public string PasswordHash { get; private set; }
     public Balance Balance { get; private set; }
     public bool IsAdmin { get; private set; }
+    public IReadOnlyList<AccountRent> AccountRents => _accountRents;
 
     private Account(string username, string passwordHash, Balance balance)
     {

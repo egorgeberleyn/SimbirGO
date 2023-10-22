@@ -1,6 +1,6 @@
 ﻿using FluentResults;
 
-namespace Simbir.GO.Domain.Transports.Errors;
+namespace Simbir.GO.Domain.Rents.Errors;
 
 public class IncorrectPriceTypeError : Error
 {

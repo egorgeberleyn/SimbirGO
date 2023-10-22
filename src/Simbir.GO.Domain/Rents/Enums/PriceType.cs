@@ -1,4 +1,4 @@
-﻿namespace Simbir.GO.Domain.Transports.Enums;
+﻿namespace Simbir.GO.Domain.Rents.Enums;
 
 public enum PriceType
 {
