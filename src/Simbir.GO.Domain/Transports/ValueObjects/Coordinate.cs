@@ -1,5 +1,5 @@
-﻿using Simbir.GO.Shared.Entities;
-using StatusGeneric;
+﻿using FluentResults;
+using Simbir.GO.Shared.Entities;
 
 namespace Simbir.GO.Domain.Transports.ValueObjects;
 
@@ -11,11 +11,10 @@ public class Coordinate : ValueObject
     private Coordinate(double latitude, double longitude) => 
         (Latitude, Longitude) = (latitude, longitude);
 
-    public static IStatusGeneric<Coordinate> Create(double latitude, double longitude)
+    public static Result<Coordinate> Create(double latitude, double longitude)
     {
-        var status = new StatusGenericHandler<Coordinate>();
         //Add validation
-        return status.SetResult(new Coordinate(latitude, longitude));
+        return new Coordinate(latitude, longitude);
     }
     
     protected override IEnumerable<object?> GetAtomicValues()

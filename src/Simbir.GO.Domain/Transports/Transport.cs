@@ -1,7 +1,8 @@
-﻿using Simbir.GO.Domain.Transports.Enums;
+﻿using FluentResults;
+using Simbir.GO.Domain.Transports.Enums;
+using Simbir.GO.Domain.Transports.Errors;
 using Simbir.GO.Domain.Transports.ValueObjects;
 using Simbir.GO.Shared.Entities;
-using StatusGeneric;
 
 namespace Simbir.GO.Domain.Transports;
 
@@ -33,19 +34,17 @@ public class Transport : Entity
         Coordinate = coordinate;
     }
 
-    public static IStatusGeneric<Transport> Create(long ownerId, bool canBeRented, string type, string model, string color,
+    public static Result<Transport> Create(long ownerId, bool canBeRented, string type, string model, string color,
         string identifier, string description, double? minutePrice, double? dayPrice, double latitude, double longitude)
     {
-        var status = new StatusGenericHandler<Transport>();
-
         if (!Enum.TryParse<TransportType>(type, true, out var transportType))
-            status.AddError("Incorrect transport type", nameof(type));
+            return Result.Fail(new IncorrectTransportTypeError(type));
 
         var createdCoordinate = Coordinate.Create(latitude: latitude, longitude: longitude);
-        if (status.CombineStatuses(createdCoordinate).HasErrors)
-            return status;
+        if (createdCoordinate.IsFailed)
+            return Result.Fail(createdCoordinate.Errors[0]);
 
-        return status.SetResult(new Transport(ownerId, canBeRented, transportType, model, color, identifier,
-            description, minutePrice, dayPrice, createdCoordinate.Result));
+        return new Transport(ownerId, canBeRented, transportType, model, color, identifier,
+            description, minutePrice, dayPrice, createdCoordinate.Value);
     }
 }

@@ -3,6 +3,6 @@
 public enum PriceType
 {
     None = 0,
-    Minute = 1,
+    Minutes = 1,
     Days = 2,
 }

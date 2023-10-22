@@ -1,6 +1,7 @@
-﻿using Simbir.GO.Domain.Accounts.Enums;
+﻿using FluentResults;
+using Simbir.GO.Domain.Accounts.Enums;
+using Simbir.GO.Domain.Accounts.Errors;
 using Simbir.GO.Shared.Entities;
-using StatusGeneric;
 
 namespace Simbir.GO.Domain.Accounts.ValueObjects;
 
@@ -12,13 +13,12 @@ public class Balance : ValueObject
     private Balance(double value, Currency currency) =>
         (Value, Currency) = (value, currency);
 
-    public static IStatusGeneric<Balance> Create(double value, string currency)
+    public static Result<Balance> Create(double value, string currency)
     {
-        var status = new StatusGenericHandler<Balance>();
-        
         if (!Enum.TryParse<Currency>(currency, true, out var balanceCurrency))
-            throw new Exception();
-        return status.SetResult(new Balance(value, balanceCurrency));
+            return new IncorrectCurrencyFormatError(currency);
+        
+        return new Balance(value, balanceCurrency);
     }
     
     protected override IEnumerable<object?> GetAtomicValues()

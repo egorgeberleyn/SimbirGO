@@ -1,6 +1,7 @@
-﻿using Simbir.GO.Domain.Transports.Enums;
+﻿using FluentResults;
+using Simbir.GO.Domain.Transports.Enums;
+using Simbir.GO.Domain.Transports.Errors;
 using Simbir.GO.Shared.Entities;
-using StatusGeneric;
 
 namespace Simbir.GO.Domain.Transports.Entities;
 
@@ -26,14 +27,12 @@ public class Rent : Entity
         FinalPrice = finalPrice;
     }
 
-    public static IStatusGeneric<Rent> Create(long transportId, long userId, DateTime? timeEnd, double priceOfUnit,
+    public static Result<Rent> Create(long transportId, long userId, DateTime? timeEnd, double priceOfUnit,
         string priceType, double? finalPrice)
     {
-        var status = new StatusGenericHandler<Rent>();
-
         if (!Enum.TryParse<PriceType>(priceType, true, out var rentPriceType))
-            status.AddError("Incorrect price type", nameof(priceType));
+            return Result.Fail(new IncorrectPriceTypeError(priceType));
             
-        return  status.SetResult(new Rent(transportId, userId, timeEnd, priceOfUnit, rentPriceType, finalPrice));
+        return new Rent(transportId, userId, timeEnd, priceOfUnit, rentPriceType, finalPrice);
     }
 }
