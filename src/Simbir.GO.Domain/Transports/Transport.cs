@@ -37,29 +37,25 @@ public class Transport : Entity
     public static Result<Transport> Create(long ownerId, bool canBeRented, string type, string model, string color,
         string identifier, string description, double? minutePrice, double? dayPrice, double latitude, double longitude)
     {
-        if (!Enum.TryParse<TransportType>(type, true, out var transportType))
-            return Result.Fail(new IncorrectTransportTypeError(type));
-
+        var transportType = CheckTransportType(type);
         var newCoordinate = Coordinate.Create(latitude: latitude, longitude: longitude);
         if (newCoordinate.IsFailed)
             return Result.Fail(newCoordinate.Errors[0]);
 
-        return new Transport(ownerId, canBeRented, transportType, model, color, identifier,
+        return new Transport(ownerId, canBeRented, transportType.Value, model, color, identifier,
             description, minutePrice, dayPrice, newCoordinate.Value);
     }
     
     public Result<Transport> Update(bool canBeRented, string type, string model, string color,
         string identifier, string description, double? minutePrice, double? dayPrice, double latitude, double longitude)
     {
-        if (!Enum.TryParse<TransportType>(type, true, out var transportType))
-            return Result.Fail(new IncorrectTransportTypeError(type));
-
+        var transportType = CheckTransportType(type);
         var newCoordinate = Coordinate.Create(latitude: latitude, longitude: longitude);
         if (newCoordinate.IsFailed)
             return Result.Fail(newCoordinate.Errors[0]);
 
         CanBeRented = canBeRented;
-        TransportType = transportType;
+        TransportType = transportType.Value;
         Model = model;
         Color = color;
         Identifier = identifier;
@@ -69,5 +65,12 @@ public class Transport : Entity
         Coordinate = newCoordinate.Value;
 
         return this;
+    }
+
+    private static Result<TransportType> CheckTransportType(string type)
+    {
+        return !Enum.TryParse<TransportType>(type, true, out var transportType) 
+            ? Result.Fail(new IncorrectTransportTypeError(type)) 
+            : Result.Ok(transportType);
     }
 }
