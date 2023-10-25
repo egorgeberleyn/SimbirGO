@@ -37,7 +37,7 @@ public class Transport : Entity
     public static Result<Transport> Create(long ownerId, bool canBeRented, string type, string model, string color,
         string identifier, string description, double? minutePrice, double? dayPrice, double latitude, double longitude)
     {
-        var transportType = CheckTransportType(type);
+        var transportType = ValidateTransportType(type);
         var newCoordinate = Coordinate.Create(latitude: latitude, longitude: longitude);
         if (newCoordinate.IsFailed)
             return Result.Fail(newCoordinate.Errors[0]);
@@ -49,7 +49,7 @@ public class Transport : Entity
     public Result<Transport> Update(bool canBeRented, string type, string model, string color,
         string identifier, string description, double? minutePrice, double? dayPrice, double latitude, double longitude)
     {
-        var transportType = CheckTransportType(type);
+        var transportType = ValidateTransportType(type);
         var newCoordinate = Coordinate.Create(latitude: latitude, longitude: longitude);
         if (newCoordinate.IsFailed)
             return Result.Fail(newCoordinate.Errors[0]);
@@ -67,7 +67,7 @@ public class Transport : Entity
         return this;
     }
 
-    private static Result<TransportType> CheckTransportType(string type)
+    private static Result<TransportType> ValidateTransportType(string type)
     {
         return !Enum.TryParse<TransportType>(type, true, out var transportType) 
             ? Result.Fail(new IncorrectTransportTypeError(type)) 

@@ -2,8 +2,5 @@
     <ItemGroup>
       <ProjectReference Include="..\Simbir.GO.Domain\Simbir.GO.Domain.csproj" />
     </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Specifications\" />
-    </ItemGroup>
 
 </Project>

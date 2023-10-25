@@ -1,13 +1,15 @@
-﻿using Simbir.GO.Application.Contracts.Accounts;
+﻿using FluentResults;
+using Simbir.GO.Application.Contracts.Accounts;
+using Simbir.GO.Application.Services.Common;
 using Simbir.GO.Domain.Accounts;
 
 namespace Simbir.GO.Application.Interfaces;
 
 public interface IAccountService
 {
-    Task<Account> GetCurrentAccountAsync();
-    Task<string> SignInAsync(SignInAccountRequest request);
-    Task<string> SignUpAsync(SignUpAccountRequest request);
-    Task<long> UpdateAccountAsync(UpdateAccountRequest request);
+    Task<Result<Account>> GetCurrentAccountAsync();
+    Task<Result<AuthResult>> SignInAsync(SignInAccountRequest request);
+    Task<Result<Success>> SignUpAsync(SignUpAccountRequest request);
+    Task<Result<long>> UpdateAccountAsync(UpdateAccountRequest request);
     Task SignOutAsync();
 }
