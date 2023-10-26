@@ -1,11 +1,8 @@
 ﻿using Simbir.GO.Domain.Transports;
+using Simbir.GO.Shared.Persistence.Repositories;
 
 namespace Simbir.GO.Application.Interfaces.Persistence.Repositories;
 
-public interface ITransportRepository
+public interface ITransportRepository : IRepository<Transport>
 {
-    Task<Transport?> FindTransportByIdAsync(long transportId);
-    Task AddTransportAsync(Transport transport);
-    void UpdateTransport(Transport updatedTransport);
-    void DeleteTransport(Transport transport);
 }

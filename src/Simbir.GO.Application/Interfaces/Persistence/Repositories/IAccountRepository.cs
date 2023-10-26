@@ -1,12 +1,8 @@
 ﻿using Simbir.GO.Domain.Accounts;
-using Simbir.GO.Shared.Persistence.Specifications;
+using Simbir.GO.Shared.Persistence.Repositories;
 
 namespace Simbir.GO.Application.Interfaces.Persistence.Repositories;
 
-public interface IAccountRepository
+public interface IAccountRepository : IRepository<Account>
 {
-    Task<Account?> FindAccountByIdAsync(long accountId);
-    Task<Account?> GetBy(Specification<Account> spec);
-    Task<long> AddAccountAsync(Account account);
-    long Update(Account updatedAccount);
 }

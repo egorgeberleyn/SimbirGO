@@ -29,6 +29,6 @@ public class UserService : IUserService
     {
         if (!TryGetUserId(out var userId))
             return null;
-        return await _accountRepository.FindAccountByIdAsync(userId);
+        return await _accountRepository.GetByIdAsync(userId);
     }
 }

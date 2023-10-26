@@ -40,7 +40,7 @@ public class AccountService : IAccountService
     public async Task<Result<AuthResult>> SignInAsync(SignInAccountRequest request)
     {
         var usernameSpec = new ByUsernameSpec(request.Username);
-        var account = await _accountRepository.GetBy(usernameSpec);
+        var account = await _accountRepository.GetByAsync(usernameSpec);
 
         if (account is null)
             return new NotExistsAccountError();
@@ -60,7 +60,7 @@ public class AccountService : IAccountService
         if (createdAccount.IsFailed)
             return Result.Fail(createdAccount.Errors[0]);
         
-        await _accountRepository.AddAccountAsync(createdAccount.Value);
+        await _accountRepository.AddAsync(createdAccount.Value);
         await _dbContext.SaveChangesAsync();
         return new Success("Ok");
     }

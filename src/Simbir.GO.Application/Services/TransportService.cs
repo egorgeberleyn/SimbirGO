@@ -21,7 +21,7 @@ public sealed class TransportService : ITransportService
 
     public async Task<Result<Transport>> GetTransportByIdAsync(long transportId)
     {
-        var transport = await _transportRepository.FindTransportByIdAsync(transportId);
+        var transport = await _transportRepository.GetByIdAsync(transportId);
         if(transport is null)
             Result.Fail(new NotFoundTransportError());
         return Result.Ok(transport!);
@@ -35,14 +35,14 @@ public sealed class TransportService : ITransportService
         if (createdTransport.IsFailed)
             return Result.Fail(createdTransport.Errors[0]);
 
-        await _transportRepository.AddTransportAsync(createdTransport.Value);
+        await _transportRepository.AddAsync(createdTransport.Value);
         await _dbContext.SaveChangesAsync();
         return createdTransport.Value.Id;
     }
 
     public async Task<Result<long>> UpdateTransportAsync(long transportId, UpdateTransportRequest request)
     {
-        var transport = await _transportRepository.FindTransportByIdAsync(transportId);
+        var transport = await _transportRepository.GetByIdAsync(transportId);
         if(transport is null)
             return new NotFoundTransportError();
 
@@ -52,18 +52,18 @@ public sealed class TransportService : ITransportService
         if (updatedTransport.IsFailed)
             return Result.Fail(updatedTransport.Errors[0]);
 
-        _transportRepository.UpdateTransport(updatedTransport.Value);
+        _transportRepository.Update(updatedTransport.Value);
         await _dbContext.SaveChangesAsync();
         return updatedTransport.Value.Id;
     }
 
     public async Task<Result<long>> DeleteTransportAsync(long transportId)
     {
-        var transport = await _transportRepository.FindTransportByIdAsync(transportId);
+        var transport = await _transportRepository.GetByIdAsync(transportId);
         if(transport is null)
             return new NotFoundTransportError();
         
-        _transportRepository.DeleteTransport(transport);
+        _transportRepository.Delete(transport);
         await _dbContext.SaveChangesAsync();
         return transport.Id;
     }
