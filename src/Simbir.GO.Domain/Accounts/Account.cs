@@ -67,6 +67,16 @@ public class Account : Entity
         PasswordSalt = passwordSalt;
         return this;
     }
+
+    public Result<Success> AddBalance(double balanceValue)
+    {
+        var createdBalance = Balance.Create(Balance.Value + balanceValue);
+        if(createdBalance.IsFailed)
+            return Result.Fail(createdBalance.Errors[0]);
+        
+        Balance = createdBalance.Value;
+        return new Success("Balance successfully replenished");
+    }
     
     private static Result<Role> ValidateRole(string role)
     {
