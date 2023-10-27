@@ -1,12 +1,17 @@
-﻿using Simbir.GO.Application.Contracts.Rents;
-using Simbir.GO.Domain.Accounts.Entities;
+﻿using FluentResults;
+using Simbir.GO.Application.Contracts.Rents;
+using Simbir.GO.Domain.Rents;
+using Simbir.GO.Domain.Transports;
 
 namespace Simbir.GO.Application.Interfaces;
 
 public interface IRentService
 {
-    Task<List<AccountRent>> GetRentHistoryAsync();
-    Task<AccountRent> GetTransportRentHistoryAsync();
-    Task<long> StartRentAsync(long transportId, StartRentRequest request);
-    Task<long> EndRentAsync(long rentId, EndRentRequest request);
+    Task<Result<Transport>> GetRentalTransportAsync(GetRentalTransportRequest request);
+    Task<Result<Rent>> GetRentByIdAsync(long rentId);
+    Task<Result<List<Rent>>> GetRentHistoryAsync();
+    Task<Result<List<Rent>>> GetTransportRentHistoryAsync(long transportId);
+    
+    Task<Result<long>> StartRentAsync(long transportId, StartRentRequest request);
+    Task<Result<long>> EndRentAsync(long rentId, EndRentRequest request);
 }

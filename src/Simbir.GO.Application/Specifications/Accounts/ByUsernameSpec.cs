@@ -1,7 +1,7 @@
 ﻿using Simbir.GO.Domain.Accounts;
 using Simbir.GO.Shared.Persistence.Specifications;
 
-namespace Simbir.GO.Application.Specifications;
+namespace Simbir.GO.Application.Specifications.Accounts;
 
 public class ByUsernameSpec : Specification<Account>
 {

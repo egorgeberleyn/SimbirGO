@@ -5,7 +5,6 @@ using Simbir.GO.Shared.Presentation;
 
 namespace Simbir.GO.API.Controllers;
 
-[Route("[controller]")]
 public class AccountController : ApiController
 {
     private readonly IAccountService _accountService;

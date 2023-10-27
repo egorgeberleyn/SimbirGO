@@ -5,7 +5,7 @@ namespace Simbir.GO.Shared.Presentation;
 
 [ApiController]
 [Authorize]
-[Route("api")]
+[Route("api/[controller]")]
 public class ApiController : Controller
 {
     
