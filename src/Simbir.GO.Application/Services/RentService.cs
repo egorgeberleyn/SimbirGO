@@ -14,15 +14,15 @@ namespace Simbir.GO.Application.Services;
 public class RentService : IRentService
 {
     private readonly IAppDbContext _dbContext;
-    private readonly IUserService _userService;
+    private readonly IUserContext _userContext;
     private readonly IRentRepository _rentRepository;
     private readonly ITransportRepository _transportRepository;
 
-    public RentService(IRentRepository rentRepository, IUserService userService, 
+    public RentService(IRentRepository rentRepository, IUserContext userContext, 
         ITransportRepository transportRepository, IAppDbContext dbContext)
     {
         _rentRepository = rentRepository;
-        _userService = userService;
+        _userContext = userContext;
         _transportRepository = transportRepository;
         _dbContext = dbContext;
     }
@@ -42,7 +42,7 @@ public class RentService : IRentService
 
     public async Task<Result<List<Rent>>> GetRentHistoryAsync()
     {
-        var currentAccount = await _userService.GetUserAsync();
+        var currentAccount = await _userContext.GetUserAsync();
         if (currentAccount is null)
             return new NotExistsAccountError();
 
@@ -66,7 +66,7 @@ public class RentService : IRentService
 
     public async Task<Result<long>> StartRentAsync(long transportId, StartRentRequest request)
     {
-        if (!_userService.TryGetUserId(out var accountId))
+        if (!_userContext.TryGetUserId(out var accountId))
             return new NotExistsAccountError();
         
         var transport = await _transportRepository.GetByIdAsync(transportId);

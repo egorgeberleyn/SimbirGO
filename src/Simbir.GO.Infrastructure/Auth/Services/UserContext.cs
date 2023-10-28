@@ -6,12 +6,12 @@ using Simbir.GO.Domain.Accounts;
 
 namespace Simbir.GO.Infrastructure.Auth.Services;
 
-public class UserService : IUserService
+public class UserContext : IUserContext
 {
     private readonly IHttpContextAccessor _contextAccessor;
     private readonly IAccountRepository _accountRepository;
 
-    public UserService(IHttpContextAccessor contextAccessor, IAccountRepository accountRepository)
+    public UserContext(IHttpContextAccessor contextAccessor, IAccountRepository accountRepository)
     {
         _contextAccessor = contextAccessor;
         _accountRepository = accountRepository;

@@ -2,7 +2,7 @@
 
 namespace Simbir.GO.Application.Interfaces.Auth;
 
-public interface IUserService
+public interface IUserContext
 {
     bool TryGetUserId(out long result);
     Task<Account?> GetUserAsync();

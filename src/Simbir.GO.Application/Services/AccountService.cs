@@ -15,23 +15,23 @@ public class AccountService : IAccountService
 {
     private readonly IAppDbContext _dbContext;
     private readonly IAccountRepository _accountRepository;
-    private readonly IUserService _userService;
+    private readonly IUserContext _userContext;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
-    public AccountService(IAppDbContext dbContext, IAccountRepository accountRepository, IUserService userService, 
+    public AccountService(IAppDbContext dbContext, IAccountRepository accountRepository, IUserContext userContext, 
         IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator)
     {
         _dbContext = dbContext;
         _accountRepository = accountRepository;
-        _userService = userService;
+        _userContext = userContext;
         _passwordHasher = passwordHasher;
         _jwtTokenGenerator = jwtTokenGenerator;
     }
 
     public async Task<Result<Account>> GetCurrentAccountAsync()
     {
-        var account = await _userService.GetUserAsync();
+        var account = await _userContext.GetUserAsync();
         if (account is null)
             return new NotExistsAccountError();
         return account;
@@ -67,7 +67,7 @@ public class AccountService : IAccountService
 
     public async Task<Result<long>> UpdateAccountAsync(UpdateAccountRequest request)
     {
-        var currentAccount = await _userService.GetUserAsync();
+        var currentAccount = await _userContext.GetUserAsync();
         if (currentAccount is null)
             return new NotExistsAccountError();
         
