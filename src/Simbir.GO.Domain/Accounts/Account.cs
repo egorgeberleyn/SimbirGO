@@ -15,7 +15,6 @@ public class Account : Entity
     public byte[] PasswordSalt { get; private set; }
     public Balance Balance { get; private set; }
     public Role Role { get; private set; }
-    public bool IsAdmin { get; private set; }
     public IReadOnlyList<Rent> AccountRents => _accountRents;
 
     private Account(string username, byte[] passwordHash, byte[] passwordSalt, Balance balance, Role role)

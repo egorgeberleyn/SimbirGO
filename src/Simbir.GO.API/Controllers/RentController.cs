@@ -39,7 +39,7 @@ public class RentController : ApiController
     [HttpGet("MyHistory")]
     public async Task<IActionResult> GetMyRentHistory()
     {
-        var result = await _rentService.GetRentHistoryAsync();
+        var result = await _rentService.GetMyRentHistoryAsync();
         return result switch {
             { IsFailed: true } => Problem(),
             { IsSuccess: true } => Ok(result.Value),

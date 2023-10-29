@@ -12,14 +12,14 @@ public class Rent : Entity
 {
     public long TransportId { get; private set; }
     public long UserId { get; private set; }
-    public DateTime TimeStart { get; init; }
+    public DateTime TimeStart { get; private set; }
     public DateTime? TimeEnd { get; private set; }
     public double PriceOfUnit { get; private set; }
     public PriceType PriceType { get; private set; }
     public double? FinalPrice { get; private set; }
 
-    public Account Account { get; init; } = null!;
-    public Transport Transport { get; init; } = null!;
+    public Account Account { get; set; } = null!;
+    public Transport Transport { get; set; } = null!;
 
     private Rent(long transportId, long userId, double priceOfUnit,
         PriceType priceType, DateTime timeStart, DateTime? timeEnd = null, double? finalPrice = null)
@@ -33,13 +33,41 @@ public class Rent : Entity
         FinalPrice = finalPrice;
     }
 
-    public static Result<Rent> Create(long transportId, long userId, DateTime timeStart, DateTime? timeEnd,
+    public static Result<Rent> Create(long transportId, long userId, string timeStart, string? timeEnd,
         double priceOfUnit, string priceType, double? finalPrice)
     {
         if (!Enum.TryParse<PriceType>(priceType, true, out var rentPriceType))
             return Result.Fail(new IncorrectPriceTypeError(priceType));
 
-        return new Rent(transportId, userId, priceOfUnit, rentPriceType, timeStart, timeEnd, finalPrice);
+        if (!DateTime.TryParse(timeStart, out var rentTimeStart))
+            return Result.Fail(new Error(""));
+        
+        if (!DateTime.TryParse(timeEnd, out var rentTimeEnd))
+            return Result.Fail(new Error(""));
+
+        return new Rent(transportId, userId, priceOfUnit, rentPriceType, rentTimeStart, rentTimeEnd, finalPrice);
+    }
+    
+    public Result<Rent> Update(long transportId, long userId, string timeStart, string? timeEnd,
+        double priceOfUnit, string priceType, double? finalPrice)
+    {
+        if (!Enum.TryParse<PriceType>(priceType, true, out var rentPriceType))
+            return Result.Fail(new IncorrectPriceTypeError(priceType));
+
+        if (!DateTime.TryParse(timeStart, out var rentTimeStart))
+            return Result.Fail(new Error(""));
+        
+        if (!DateTime.TryParse(timeEnd, out var rentTimeEnd))
+            return Result.Fail(new Error(""));
+
+        TransportId = transportId;
+        UserId = userId;
+        PriceOfUnit = priceOfUnit;
+        PriceType = rentPriceType;
+        TimeStart = rentTimeStart;
+        TimeEnd = rentTimeEnd;
+        FinalPrice = finalPrice;
+        return this;
     }
 
     public static Result<Rent> Start(long transportId, long userId, double priceOfUnit,

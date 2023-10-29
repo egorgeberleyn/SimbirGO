@@ -40,7 +40,7 @@ public class RentService : IRentService
             : rent;
     }
 
-    public async Task<Result<List<Rent>>> GetRentHistoryAsync()
+    public async Task<Result<List<Rent>>> GetMyRentHistoryAsync()
     {
         var currentAccount = await _userContext.GetUserAsync();
         if (currentAccount is null)

@@ -9,7 +9,7 @@ public interface IRentService
 {
     Task<Result<Transport>> GetRentalTransportAsync(GetRentalTransportRequest request);
     Task<Result<Rent>> GetRentByIdAsync(long rentId);
-    Task<Result<List<Rent>>> GetRentHistoryAsync();
+    Task<Result<List<Rent>>> GetMyRentHistoryAsync();
     Task<Result<List<Rent>>> GetTransportRentHistoryAsync(long transportId);
     
     Task<Result<long>> StartRentAsync(long transportId, StartRentRequest request);
