@@ -21,6 +21,15 @@ public static class SpecificationQueryBuilder
         if (specification.OrderBy != null)
             query = query.OrderBy(specification.OrderBy);
 
+        if (specification.OrderByDesc != null)
+            query = query.OrderByDescending(specification.OrderByDesc);
+        
+        if (specification.Take != null)
+            query = query.Take(specification.Take.Value);
+        
+        if (specification.Skip != null)
+            query = query.Skip(specification.Skip.Value);
+
         return query;
     }
 }

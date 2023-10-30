@@ -11,6 +11,12 @@ public abstract class Specification<TEntity>
     public List<Expression<Func<TEntity, object>>>? Includes { get; } = new();
     
     public Expression<Func<TEntity, object>>? OrderBy { get; private set; }
+    
+    public Expression<Func<TEntity, object>>? OrderByDesc { get; private set; }
+    
+    public int? Skip { get; private set; }
+    
+    public int? Take { get; private set; }
 
     protected Specification()
     {
@@ -29,5 +35,20 @@ public abstract class Specification<TEntity>
     protected void AddOrderBy(Expression<Func<TEntity, object>> orderByExpression)
     {
         OrderBy = orderByExpression;
+    }
+    
+    protected void AddOrderByDesc(Expression<Func<TEntity, object>> orderByDescExpression)
+    {
+        OrderByDesc = orderByDescExpression;
+    }
+    
+    protected void AddSkip(int skipExpression)
+    {
+        Skip = skipExpression;
+    }
+    
+    protected void AddTake(int takeExpression)
+    {
+        Take = takeExpression;
     }
 }

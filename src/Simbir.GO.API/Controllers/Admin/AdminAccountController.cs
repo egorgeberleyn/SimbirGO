@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Simbir.GO.Application.Contracts.Admin.Accounts;
 using Simbir.GO.Application.Interfaces;
 using Simbir.GO.Shared.Presentation;
@@ -6,6 +7,7 @@ using Simbir.GO.Shared.Presentation;
 namespace Simbir.GO.API.Controllers.Admin;
 
 [Route("Admin/Account")]
+[Authorize(Roles="Admin")]
 public class AdminAccountController : ApiController
 {
     private readonly IAdminAccountService _adminAccountService;
