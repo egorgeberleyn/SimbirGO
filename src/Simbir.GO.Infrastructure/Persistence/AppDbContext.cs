@@ -2,8 +2,11 @@
 using Simbir.GO.Application.Interfaces.Persistence;
 using Simbir.GO.Application.Services.Common;
 using Simbir.GO.Domain.Accounts;
+using Simbir.GO.Domain.Accounts.Enums;
 using Simbir.GO.Domain.Rents;
+using Simbir.GO.Domain.Rents.Enums;
 using Simbir.GO.Domain.Transports;
+using Simbir.GO.Domain.Transports.Enums;
 
 namespace Simbir.GO.Infrastructure.Persistence;
 
@@ -18,10 +21,14 @@ public class AppDbContext : DbContext, IAppDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasPostgresEnum<Role>();
+        modelBuilder.HasPostgresEnum<TransportType>();
+        modelBuilder.HasPostgresEnum<PriceType>();
+        
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
     }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseCamelCaseNamingConvention();
+        => optionsBuilder.UseSnakeCaseNamingConvention();
 }

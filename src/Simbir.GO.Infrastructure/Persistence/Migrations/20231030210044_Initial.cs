@@ -15,6 +15,11 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:Enum:price_type", "none,minutes,days")
+                .Annotation("Npgsql:Enum:role", "none,client,admin")
+                .Annotation("Npgsql:Enum:transport_type", "none,car,bike,scooter,all");
+
             migrationBuilder.CreateTable(
                 name: "accounts",
                 columns: table => new
@@ -22,14 +27,14 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     username = table.Column<string>(type: "text", nullable: false),
-                    passwordHash = table.Column<byte[]>(type: "bytea", nullable: false),
-                    passwordSalt = table.Column<byte[]>(type: "bytea", nullable: false),
-                    balance_Value = table.Column<double>(type: "double precision", nullable: false),
+                    password_hash = table.Column<byte[]>(type: "bytea", nullable: false),
+                    password_salt = table.Column<byte[]>(type: "bytea", nullable: false),
+                    balance_value = table.Column<double>(type: "double precision", nullable: false),
                     role = table.Column<Role>(type: "role", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pK_accounts", x => x.id);
+                    table.PrimaryKey("pk_accounts", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -38,17 +43,17 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    userId = table.Column<long>(type: "bigint", nullable: false),
+                    user_id = table.Column<long>(type: "bigint", nullable: false),
                     token = table.Column<string>(type: "text", nullable: false),
-                    jwtId = table.Column<string>(type: "text", nullable: false),
-                    isUsed = table.Column<bool>(type: "boolean", nullable: false),
-                    isRevoked = table.Column<bool>(type: "boolean", nullable: false),
-                    addedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    expiryDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    jwt_id = table.Column<string>(type: "text", nullable: false),
+                    is_used = table.Column<bool>(type: "boolean", nullable: false),
+                    is_revoked = table.Column<bool>(type: "boolean", nullable: false),
+                    added_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    expiry_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pK_refresh_tokens", x => x.id);
+                    table.PrimaryKey("pk_refresh_tokens", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -57,21 +62,21 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ownerId = table.Column<long>(type: "bigint", nullable: false),
-                    canBeRented = table.Column<bool>(type: "boolean", nullable: false),
-                    transportType = table.Column<TransportType>(type: "transport_type", nullable: false),
+                    owner_id = table.Column<long>(type: "bigint", nullable: false),
+                    can_be_rented = table.Column<bool>(type: "boolean", nullable: false),
+                    transport_type = table.Column<TransportType>(type: "transport_type", nullable: false),
                     model = table.Column<string>(type: "text", nullable: false),
                     color = table.Column<string>(type: "text", nullable: false),
                     identifier = table.Column<string>(type: "text", nullable: false),
                     description = table.Column<string>(type: "text", nullable: true),
-                    minutePrice = table.Column<double>(type: "double precision", nullable: true),
-                    dayPrice = table.Column<double>(type: "double precision", nullable: true),
-                    coordinate_Latitude = table.Column<double>(type: "double precision", nullable: false),
-                    coordinate_Longitude = table.Column<double>(type: "double precision", nullable: false)
+                    minute_price = table.Column<double>(type: "double precision", nullable: true),
+                    day_price = table.Column<double>(type: "double precision", nullable: true),
+                    coordinate_latitude = table.Column<double>(type: "double precision", nullable: false),
+                    coordinate_longitude = table.Column<double>(type: "double precision", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pK_transports", x => x.id);
+                    table.PrimaryKey("pk_transports", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -80,41 +85,41 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    transportId = table.Column<long>(type: "bigint", nullable: false),
-                    userId = table.Column<long>(type: "bigint", nullable: false),
-                    timeStart = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    timeEnd = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    priceOfUnit = table.Column<double>(type: "double precision", nullable: false),
-                    priceType = table.Column<PriceType>(type: "price_type", nullable: false),
-                    finalPrice = table.Column<double>(type: "double precision", nullable: true),
-                    accountId = table.Column<long>(type: "bigint", nullable: false)
+                    transport_id = table.Column<long>(type: "bigint", nullable: false),
+                    user_id = table.Column<long>(type: "bigint", nullable: false),
+                    time_start = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    time_end = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    price_of_unit = table.Column<double>(type: "double precision", nullable: false),
+                    price_type = table.Column<PriceType>(type: "price_type", nullable: false),
+                    final_price = table.Column<double>(type: "double precision", nullable: true),
+                    account_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pK_rents", x => x.id);
+                    table.PrimaryKey("pk_rents", x => x.id);
                     table.ForeignKey(
-                        name: "fK_rents_accounts_AccountTempId",
-                        column: x => x.accountId,
+                        name: "fk_rents_accounts_account_temp_id",
+                        column: x => x.account_id,
                         principalTable: "accounts",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fK_rents_transports_transportTempId",
-                        column: x => x.transportId,
+                        name: "fk_rents_transports_transport_temp_id",
+                        column: x => x.transport_id,
                         principalTable: "transports",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "iX_rents_accountId",
+                name: "ix_rents_account_id",
                 table: "rents",
-                column: "accountId");
+                column: "account_id");
 
             migrationBuilder.CreateIndex(
-                name: "iX_rents_transportId",
+                name: "ix_rents_transport_id",
                 table: "rents",
-                column: "transportId");
+                column: "transport_id");
         }
 
         /// <inheritdoc />

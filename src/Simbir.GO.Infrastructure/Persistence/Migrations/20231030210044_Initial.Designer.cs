@@ -15,7 +15,7 @@ using Simbir.GO.Infrastructure.Persistence;
 namespace Simbir.GO.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231030200731_Initial")]
+    [Migration("20231030210044_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -26,6 +26,9 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "7.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "price_type", new[] { "none", "minutes", "days" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "role", new[] { "none", "client", "admin" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "transport_type", new[] { "none", "car", "bike", "scooter", "all" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Simbir.GO.Application.Services.Common.RefreshToken", b =>
@@ -39,24 +42,24 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
 
                     b.Property<DateTime>("AddedDate")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("addedDate");
+                        .HasColumnName("added_date");
 
                     b.Property<DateTime>("ExpiryDate")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("expiryDate");
+                        .HasColumnName("expiry_date");
 
                     b.Property<bool>("IsRevoked")
                         .HasColumnType("boolean")
-                        .HasColumnName("isRevoked");
+                        .HasColumnName("is_revoked");
 
                     b.Property<bool>("IsUsed")
                         .HasColumnType("boolean")
-                        .HasColumnName("isUsed");
+                        .HasColumnName("is_used");
 
                     b.Property<string>("JwtId")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("jwtId");
+                        .HasColumnName("jwt_id");
 
                     b.Property<string>("Token")
                         .IsRequired()
@@ -65,10 +68,10 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
 
                     b.Property<long>("UserId")
                         .HasColumnType("bigint")
-                        .HasColumnName("userId");
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id")
-                        .HasName("pK_refresh_tokens");
+                        .HasName("pk_refresh_tokens");
 
                     b.ToTable("refresh_tokens", (string)null);
                 });
@@ -85,12 +88,12 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("bytea")
-                        .HasColumnName("passwordHash");
+                        .HasColumnName("password_hash");
 
                     b.Property<byte[]>("PasswordSalt")
                         .IsRequired()
                         .HasColumnType("bytea")
-                        .HasColumnName("passwordSalt");
+                        .HasColumnName("password_salt");
 
                     b.Property<Role>("Role")
                         .HasColumnType("role")
@@ -102,7 +105,7 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
                         .HasColumnName("username");
 
                     b.HasKey("Id")
-                        .HasName("pK_accounts");
+                        .HasName("pk_accounts");
 
                     b.ToTable("accounts", (string)null);
                 });
@@ -118,44 +121,44 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
 
                     b.Property<long>("AccountId")
                         .HasColumnType("bigint")
-                        .HasColumnName("accountId");
+                        .HasColumnName("account_id");
 
                     b.Property<double?>("FinalPrice")
                         .HasColumnType("double precision")
-                        .HasColumnName("finalPrice");
+                        .HasColumnName("final_price");
 
                     b.Property<double>("PriceOfUnit")
                         .HasColumnType("double precision")
-                        .HasColumnName("priceOfUnit");
+                        .HasColumnName("price_of_unit");
 
                     b.Property<PriceType>("PriceType")
                         .HasColumnType("price_type")
-                        .HasColumnName("priceType");
+                        .HasColumnName("price_type");
 
                     b.Property<DateTime?>("TimeEnd")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("timeEnd");
+                        .HasColumnName("time_end");
 
                     b.Property<DateTime>("TimeStart")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("timeStart");
+                        .HasColumnName("time_start");
 
                     b.Property<long>("TransportId")
                         .HasColumnType("bigint")
-                        .HasColumnName("transportId");
+                        .HasColumnName("transport_id");
 
                     b.Property<long>("UserId")
                         .HasColumnType("bigint")
-                        .HasColumnName("userId");
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id")
-                        .HasName("pK_rents");
+                        .HasName("pk_rents");
 
                     b.HasIndex("AccountId")
-                        .HasDatabaseName("iX_rents_accountId");
+                        .HasDatabaseName("ix_rents_account_id");
 
                     b.HasIndex("TransportId")
-                        .HasDatabaseName("iX_rents_transportId");
+                        .HasDatabaseName("ix_rents_transport_id");
 
                     b.ToTable("rents", (string)null);
                 });
@@ -171,7 +174,7 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
 
                     b.Property<bool>("CanBeRented")
                         .HasColumnType("boolean")
-                        .HasColumnName("canBeRented");
+                        .HasColumnName("can_be_rented");
 
                     b.Property<string>("Color")
                         .IsRequired()
@@ -180,7 +183,7 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
 
                     b.Property<double?>("DayPrice")
                         .HasColumnType("double precision")
-                        .HasColumnName("dayPrice");
+                        .HasColumnName("day_price");
 
                     b.Property<string>("Description")
                         .HasColumnType("text")
@@ -193,7 +196,7 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
 
                     b.Property<double?>("MinutePrice")
                         .HasColumnType("double precision")
-                        .HasColumnName("minutePrice");
+                        .HasColumnName("minute_price");
 
                     b.Property<string>("Model")
                         .IsRequired()
@@ -202,14 +205,14 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
 
                     b.Property<long>("OwnerId")
                         .HasColumnType("bigint")
-                        .HasColumnName("ownerId");
+                        .HasColumnName("owner_id");
 
                     b.Property<TransportType>("TransportType")
                         .HasColumnType("transport_type")
-                        .HasColumnName("transportType");
+                        .HasColumnName("transport_type");
 
                     b.HasKey("Id")
-                        .HasName("pK_transports");
+                        .HasName("pk_transports");
 
                     b.ToTable("transports", (string)null);
                 });
@@ -224,7 +227,7 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
 
                             b1.Property<double>("Value")
                                 .HasColumnType("double precision")
-                                .HasColumnName("balance_Value");
+                                .HasColumnName("balance_value");
 
                             b1.HasKey("AccountId");
 
@@ -232,7 +235,7 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("AccountId")
-                                .HasConstraintName("fK_accounts_accounts_id");
+                                .HasConstraintName("fk_accounts_accounts_id");
                         });
 
                     b.Navigation("Balance")
@@ -246,14 +249,14 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fK_rents_accounts_AccountTempId");
+                        .HasConstraintName("fk_rents_accounts_account_temp_id");
 
                     b.HasOne("Simbir.GO.Domain.Transports.Transport", "Transport")
                         .WithMany()
                         .HasForeignKey("TransportId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fK_rents_transports_transportTempId");
+                        .HasConstraintName("fk_rents_transports_transport_temp_id");
 
                     b.Navigation("Account");
 
@@ -270,11 +273,11 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
 
                             b1.Property<double>("Latitude")
                                 .HasColumnType("double precision")
-                                .HasColumnName("coordinate_Latitude");
+                                .HasColumnName("coordinate_latitude");
 
                             b1.Property<double>("Longitude")
                                 .HasColumnType("double precision")
-                                .HasColumnName("coordinate_Longitude");
+                                .HasColumnName("coordinate_longitude");
 
                             b1.HasKey("TransportId");
 
@@ -282,7 +285,7 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("TransportId")
-                                .HasConstraintName("fK_transports_transports_id");
+                                .HasConstraintName("fk_transports_transports_id");
                         });
 
                     b.Navigation("Coordinate")
