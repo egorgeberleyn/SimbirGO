@@ -1,6 +1,6 @@
 ﻿namespace Simbir.GO.Application.Contracts.Admin.Transports;
 
-public record UpdateTransportRequest(
+public record AdminUpdateTransportRequest(
     long OwnerId,
     bool CanBeRented, 
     string TransportType, 

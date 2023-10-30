@@ -57,7 +57,7 @@ public class AdminAccountService : IAdminAccountService
         return createdAccount.Value.Id;
     }
 
-    public async Task<Result<long>> UpdateAccountAsync(long id, UpdateAccountRequest request)
+    public async Task<Result<long>> UpdateAccountAsync(long id, AdminUpdateAccountRequest request)
     {
         var account = await _accountRepository.GetByIdAsync(id);
         if(account is null)

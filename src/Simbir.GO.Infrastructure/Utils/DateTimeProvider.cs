@@ -1,6 +1,8 @@
-﻿namespace Simbir.GO.Infrastructure.Utils;
+﻿using Simbir.GO.Application.Interfaces;
 
-public class DateTimeProvider
+namespace Simbir.GO.Infrastructure.Utils;
+
+public class DateTimeProvider : IDateTimeProvider
 {
-    
+    public DateTime UtcNow => DateTime.UtcNow;
 }

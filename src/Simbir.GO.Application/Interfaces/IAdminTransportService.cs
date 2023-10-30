@@ -10,6 +10,6 @@ public interface IAdminTransportService
     Task<Result<Transport>> GetTransportAsync(long id);
 
     Task<Result<long>> CreateTransportAsync(CreateTransportRequest request);
-    Task<Result<long>> UpdateTransportAsync(long id, UpdateTransportRequest request);
+    Task<Result<long>> UpdateTransportAsync(long id, AdminUpdateTransportRequest request);
     Task<Result<long>> DeleteTransportAsync(long id);
 }

@@ -4,7 +4,7 @@ using Simbir.GO.Shared.Persistence.Specifications;
 
 namespace Simbir.GO.Shared.Persistence.Repositories;
 
-public abstract class Repository<TEntity> : IRepository<TEntity>
+public class Repository<TEntity> : IRepository<TEntity>
     where TEntity : Entity
 {
     protected readonly DbContext DbContext;

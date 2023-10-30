@@ -51,7 +51,7 @@ public class AdminTransportController : ApiController
     }
     
     [HttpPut("{id:long}")]
-    public async Task<IActionResult> Update(long id, UpdateTransportRequest request)
+    public async Task<IActionResult> Update(long id, AdminUpdateTransportRequest request)
     {
         var result = await _adminTransportService.UpdateTransportAsync(id, request);
         return result switch {

@@ -1,6 +1,6 @@
 ﻿namespace Simbir.GO.Application.Contracts.Admin.Accounts;
 
-public record UpdateAccountRequest(
+public record AdminUpdateAccountRequest(
     string Username, 
     string Password,
     bool IsAdmin,

@@ -92,5 +92,8 @@ public class Account : Entity
         return !Enum.TryParse<Role>(role, true, out var accountRole)
             ? Result.Fail(new IncorrectRoleError()) 
             : Result.Ok(accountRole);
-    } 
+    }
+
+#pragma warning disable CS8618
+    private Account() {}
 }

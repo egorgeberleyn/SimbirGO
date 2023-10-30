@@ -51,7 +51,7 @@ public class AdminAccountController : ApiController
     }
     
     [HttpPut("{id:long}")]
-    public async Task<IActionResult> UpdateAccount(long id, UpdateAccountRequest request)
+    public async Task<IActionResult> UpdateAccount(long id, AdminUpdateAccountRequest request)
     {
         var result = await _adminAccountService.UpdateAccountAsync(id, request);
         return result switch {
@@ -61,7 +61,7 @@ public class AdminAccountController : ApiController
         };
     }
     
-    [HttpPut("{id:long}")]
+    [HttpDelete("{id:long}")]
     public async Task<IActionResult> DeleteAccount(long id)
     {
         var result = await _adminAccountService.DeleteAccountAsync(id);

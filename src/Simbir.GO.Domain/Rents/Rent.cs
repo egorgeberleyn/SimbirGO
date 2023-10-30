@@ -111,4 +111,7 @@ public class Rent : Entity
 
         return new ValidateProps(rentPriceType, rentTimeStart, rentTimeEnd);
     }
+    
+#pragma warning disable CS8618
+    private Rent() {}
 }

@@ -19,6 +19,8 @@ public class Balance : ValueObject
         return new Balance(value);
     }
     
+    private Balance() {}
+    
     protected override IEnumerable<object?> GetAtomicValues()
     {
         yield return Value;

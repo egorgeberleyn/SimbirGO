@@ -5,13 +5,19 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Npgsql;
+using Simbir.GO.Application.Interfaces;
 using Simbir.GO.Application.Interfaces.Auth;
 using Simbir.GO.Application.Interfaces.Persistence;
 using Simbir.GO.Application.Interfaces.Persistence.Repositories;
+using Simbir.GO.Domain.Accounts.Enums;
+using Simbir.GO.Domain.Rents.Enums;
+using Simbir.GO.Domain.Transports.Enums;
 using Simbir.GO.Infrastructure.Auth;
 using Simbir.GO.Infrastructure.Auth.Utils;
 using Simbir.GO.Infrastructure.Persistence;
 using Simbir.GO.Infrastructure.Persistence.Repositories;
+using Simbir.GO.Infrastructure.Utils;
 using Simbir.GO.Shared.Persistence.Repositories;
 
 namespace Simbir.GO.Infrastructure;
@@ -23,18 +29,29 @@ public static class DependencyInjection
         services
             .AddPersistence(configuration)
             .AddAuth(configuration);
+
+        services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+        
         return services;
     }
     
     private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
+        var dataSourceBuilder = new NpgsqlDataSourceBuilder(configuration.GetConnectionString("Postgres"));
+        //Map C# enum -> postgres enum
+        dataSourceBuilder.MapEnum<Role>();
+        dataSourceBuilder.MapEnum<TransportType>();
+        dataSourceBuilder.MapEnum<PriceType>();
+        var dataSource = dataSourceBuilder.Build();
+        
         services.AddScoped<IAppDbContext>(factory => factory.GetRequiredService<AppDbContext>());
         services.AddDbContext<AppDbContext>(options =>
         {
-            options.UseNpgsql(configuration.GetConnectionString("Postgres"));
+            options.UseNpgsql(dataSource);
         });
-
+        
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        //services.AddScoped<DbContext, AppDbContext>();
         
         services.AddScoped<ITransportRepository, TransportRepository>();
         services.AddScoped<IAccountRepository, AccountRepository>();

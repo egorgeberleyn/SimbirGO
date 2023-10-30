@@ -91,4 +91,7 @@ public class Transport : Entity
             ? Result.Fail(new IncorrectTransportTypeError(type)) 
             : Result.Ok(transportType);
     }
+
+#pragma warning disable CS8618
+    private Transport() {}
 }

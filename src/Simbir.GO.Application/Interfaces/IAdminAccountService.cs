@@ -10,6 +10,6 @@ public interface IAdminAccountService
     Task<Result<Account>> GetAccountAsync(long id);
 
     Task<Result<long>> CreateAccountAsync(CreateAccountRequest request);
-    Task<Result<long>> UpdateAccountAsync(long id, UpdateAccountRequest request);
+    Task<Result<long>> UpdateAccountAsync(long id, AdminUpdateAccountRequest request);
     Task<Result<long>> DeleteAccountAsync(long id);
 }

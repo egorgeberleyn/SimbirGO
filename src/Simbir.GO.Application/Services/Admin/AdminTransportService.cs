@@ -55,7 +55,7 @@ public class AdminTransportService : IAdminTransportService
         return createdTransport.Value.Id;
     }
 
-    public async Task<Result<long>> UpdateTransportAsync(long id, UpdateTransportRequest request)
+    public async Task<Result<long>> UpdateTransportAsync(long id, AdminUpdateTransportRequest request)
     {
         var transport = await _transportRepository.GetByIdAsync(id);
         if (transport is null)
