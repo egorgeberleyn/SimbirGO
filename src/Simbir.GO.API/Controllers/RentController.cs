@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Simbir.GO.Application.Contracts.Rents;
 using Simbir.GO.Application.Interfaces;
 using Simbir.GO.Shared.Presentation;
 
 namespace Simbir.GO.API.Controllers;
 
+[Route("api/Rent")]
 public class RentController : ApiController
 {
     private readonly IRentService _rentService;
@@ -15,7 +17,8 @@ public class RentController : ApiController
     }
 
     [HttpGet("Transport")]
-    public async Task<IActionResult> GetRentalTransport(GetRentalTransportRequest request)
+    [AllowAnonymous]
+    public async Task<IActionResult> GetRentalTransport(SearchTransportParams request)
     {
         var result = await _rentService.GetRentalTransportAsync(request);
         return result switch {

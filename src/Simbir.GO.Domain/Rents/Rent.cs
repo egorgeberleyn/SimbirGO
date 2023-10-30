@@ -36,61 +36,79 @@ public class Rent : Entity
     public static Result<Rent> Create(long transportId, long userId, string timeStart, string? timeEnd,
         double priceOfUnit, string priceType, double? finalPrice)
     {
-        if (!Enum.TryParse<PriceType>(priceType, true, out var rentPriceType))
-            return Result.Fail(new IncorrectPriceTypeError(priceType));
-
-        if (!DateTime.TryParse(timeStart, out var rentTimeStart))
-            return Result.Fail(new Error(""));
+        var (_, isFailed, validProps, errors) = Validate(priceType, timeStart, timeEnd);
+        if (isFailed)
+            return Result.Fail(errors);
         
-        if (!DateTime.TryParse(timeEnd, out var rentTimeEnd))
-            return Result.Fail(new Error(""));
-
-        return new Rent(transportId, userId, priceOfUnit, rentPriceType, rentTimeStart, rentTimeEnd, finalPrice);
+        return new Rent(transportId, userId, priceOfUnit, validProps.PriceType, validProps.TimeStart, 
+            validProps.TimeEnd, finalPrice);
     }
     
     public Result<Rent> Update(long transportId, long userId, string timeStart, string? timeEnd,
         double priceOfUnit, string priceType, double? finalPrice)
     {
-        if (!Enum.TryParse<PriceType>(priceType, true, out var rentPriceType))
-            return Result.Fail(new IncorrectPriceTypeError(priceType));
-
-        if (!DateTime.TryParse(timeStart, out var rentTimeStart))
-            return Result.Fail(new Error(""));
-        
-        if (!DateTime.TryParse(timeEnd, out var rentTimeEnd))
-            return Result.Fail(new Error(""));
+        var (_, isFailed, validProps, errors) = Validate(priceType, timeStart, timeEnd);
+        if (isFailed)
+            return Result.Fail(errors);
 
         TransportId = transportId;
         UserId = userId;
         PriceOfUnit = priceOfUnit;
-        PriceType = rentPriceType;
-        TimeStart = rentTimeStart;
-        TimeEnd = rentTimeEnd;
+        PriceType = validProps.PriceType;
+        TimeStart = validProps.TimeStart;
+        TimeEnd = validProps.TimeEnd;
         FinalPrice = finalPrice;
         return this;
     }
 
-    public static Result<Rent> Start(long transportId, long userId, double priceOfUnit,
-        string priceType)
+    public static Result<Rent> Start(long transportId, long userId, string priceType, 
+        double? dayPrice, double? minutePrice)
     {
         if (!Enum.TryParse<PriceType>(priceType, true, out var rentPriceType))
             return Result.Fail(new IncorrectPriceTypeError(priceType));
 
-        return new Rent(transportId, userId, priceOfUnit, rentPriceType, timeStart: DateTime.UtcNow);
+        var priceOfUnit = rentPriceType switch
+        {
+            PriceType.Minutes => minutePrice,
+            PriceType.Days => dayPrice,
+            PriceType.None => throw new InvalidEnumArgumentException($"{nameof(PriceType)} cannot be None"),
+            _ => throw new ArgumentOutOfRangeException($"Argument {nameof(PriceType)} out of range")
+        };
+        if (priceOfUnit == null)
+            return new NotIndicatedRentCostError();
+        
+        return new Rent(transportId, userId, priceOfUnit.Value, rentPriceType, timeStart: DateTime.UtcNow);
     }
 
     public Result<Rent> End()
     {
+        TimeEnd = DateTime.UtcNow;
+        var time = TimeEnd - TimeStart;
+        
         var finalPrice = PriceType switch
         {
-            PriceType.Minutes => 0,
-            PriceType.Days => 1,
+            PriceType.Minutes => time.Value.Minutes * PriceOfUnit,
+            PriceType.Days => time.Value.Days * PriceOfUnit,
             PriceType.None => throw new InvalidEnumArgumentException($"{nameof(PriceType)} cannot be None"),
             _ => throw new ArgumentOutOfRangeException($"Argument {nameof(PriceType)} out of range")
         };
 
         FinalPrice = finalPrice;
-        TimeEnd = DateTime.UtcNow;
         return this;
+    }
+
+    private record ValidateProps(PriceType PriceType, DateTime TimeStart, DateTime TimeEnd);
+    private static Result<ValidateProps> Validate(string priceType, string timeStart, string? timeEnd)
+    {
+        if (!Enum.TryParse<PriceType>(priceType, true, out var rentPriceType))
+            return Result.Fail(new IncorrectPriceTypeError(priceType));
+
+        if (!DateTime.TryParse(timeStart, out var rentTimeStart))
+            return Result.Fail(new IncorrectTimeFormatError());
+        
+        if (!DateTime.TryParse(timeEnd, out var rentTimeEnd))
+            return Result.Fail(new IncorrectTimeFormatError());
+
+        return new ValidateProps(rentPriceType, rentTimeStart, rentTimeEnd);
     }
 }

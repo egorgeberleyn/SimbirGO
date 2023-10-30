@@ -2,7 +2,7 @@
 using System.Text;
 using Simbir.GO.Application.Interfaces.Auth;
 
-namespace Simbir.GO.Infrastructure.Auth.Services;
+namespace Simbir.GO.Infrastructure.Auth.Utils;
 
 public class PasswordHasher : IPasswordHasher
 {

@@ -7,7 +7,7 @@ namespace Simbir.GO.Application.Interfaces;
 
 public interface IRentService
 {
-    Task<Result<Transport>> GetRentalTransportAsync(GetRentalTransportRequest request);
+    Task<Result<List<Transport>>> GetRentalTransportAsync(SearchTransportParams request);
     Task<Result<Rent>> GetRentByIdAsync(long rentId);
     Task<Result<List<Rent>>> GetMyRentHistoryAsync();
     Task<Result<List<Rent>>> GetTransportRentHistoryAsync(long transportId);

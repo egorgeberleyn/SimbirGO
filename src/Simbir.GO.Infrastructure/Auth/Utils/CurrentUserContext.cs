@@ -4,14 +4,14 @@ using Simbir.GO.Application.Interfaces.Auth;
 using Simbir.GO.Application.Interfaces.Persistence.Repositories;
 using Simbir.GO.Domain.Accounts;
 
-namespace Simbir.GO.Infrastructure.Auth.Services;
+namespace Simbir.GO.Infrastructure.Auth.Utils;
 
-public class UserContext : IUserContext
+public class CurrentUserContext : ICurrentUserContext
 {
     private readonly IHttpContextAccessor _contextAccessor;
     private readonly IAccountRepository _accountRepository;
 
-    public UserContext(IHttpContextAccessor contextAccessor, IAccountRepository accountRepository)
+    public CurrentUserContext(IHttpContextAccessor contextAccessor, IAccountRepository accountRepository)
     {
         _contextAccessor = contextAccessor;
         _accountRepository = accountRepository;

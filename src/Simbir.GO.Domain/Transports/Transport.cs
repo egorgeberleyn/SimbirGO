@@ -37,25 +37,35 @@ public class Transport : Entity
     public static Result<Transport> Create(long ownerId, bool canBeRented, string type, string model, string color,
         string identifier, string description, double? minutePrice, double? dayPrice, double latitude, double longitude)
     {
-        var transportType = ValidateTransportType(type);
+        var (_, isFailed, transportType, errors) = Validate(type);
+        if (isFailed)
+            return Result.Fail(errors);
+        
         var newCoordinate = Coordinate.Create(latitude: latitude, longitude: longitude);
         if (newCoordinate.IsFailed)
-            return Result.Fail(newCoordinate.Errors[0]);
+            return Result.Fail(newCoordinate.Errors);
 
-        return new Transport(ownerId, canBeRented, transportType.Value, model, color, identifier,
+        return new Transport(ownerId, canBeRented, transportType, model, color, identifier,
             description, minutePrice, dayPrice, newCoordinate.Value);
     }
     
-    public Result<Transport> Update(bool canBeRented, string type, string model, string color,
+    public Result<Transport> Update(long ownerId, bool canBeRented, string type, string model, string color,
         string identifier, string description, double? minutePrice, double? dayPrice, double latitude, double longitude)
     {
-        var transportType = ValidateTransportType(type);
+        var ownResult = CheckOwner(ownerId);
+        if (ownResult.IsFailed)
+            return Result.Fail(ownResult.Errors);
+        
+        var (_, isFailed, transportType, errors) = Validate(type);
+        if (isFailed)
+            return Result.Fail(errors);
+        
         var newCoordinate = Coordinate.Create(latitude: latitude, longitude: longitude);
         if (newCoordinate.IsFailed)
-            return Result.Fail(newCoordinate.Errors[0]);
+            return Result.Fail(newCoordinate.Errors);
 
         CanBeRented = canBeRented;
-        TransportType = transportType.Value;
+        TransportType = transportType;
         Model = model;
         Color = color;
         Identifier = identifier;
@@ -67,7 +77,19 @@ public class Transport : Entity
         return this;
     }
 
-    private static Result<TransportType> ValidateTransportType(string type)
+    public Result CheckOwner(long ownerId)
+    {
+        return OwnerId != ownerId 
+            ? Result.Fail(new NonOwnerError()) 
+            : Result.Ok();
+    }
+
+    public void SetLocation(Coordinate coordinate)
+    {
+        Coordinate = coordinate;
+    }
+
+    private static Result<TransportType> Validate(string type)
     {
         return !Enum.TryParse<TransportType>(type, true, out var transportType) 
             ? Result.Fail(new IncorrectTransportTypeError(type)) 

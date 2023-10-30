@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Simbir.GO.Application.Contracts.Accounts;
 using Simbir.GO.Application.Interfaces;
 using Simbir.GO.Shared.Presentation;
 
 namespace Simbir.GO.API.Controllers;
 
+[Route("api/Account")]
 public class AccountController : ApiController
 {
     private readonly IAccountService _accountService;
@@ -25,7 +27,8 @@ public class AccountController : ApiController
         };
     }
     
-    [HttpPost("[action]")]
+    [HttpPost("SignIn")]
+    [AllowAnonymous]
     public async Task<IActionResult> SignIn(SignInAccountRequest request)
     {
         var authResult = await _accountService.SignInAsync(request);
@@ -37,6 +40,7 @@ public class AccountController : ApiController
     }
     
     [HttpPost("SignUp")]
+    [AllowAnonymous]
     public async Task<IActionResult> SignUp(SignUpAccountRequest request)
     {
         var authResult = await _accountService.SignUpAsync(request);

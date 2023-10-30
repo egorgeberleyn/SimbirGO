@@ -2,9 +2,9 @@
 
 namespace Simbir.GO.Domain.Accounts.Errors;
 
-public class NotExistsAccountError : Error
+public class NotFoundAccountError : Error
 {
-    public NotExistsAccountError() 
+    public NotFoundAccountError() 
         : base("Account not exists in current context")
     {
         Metadata.Add("ErrorCode", 400);

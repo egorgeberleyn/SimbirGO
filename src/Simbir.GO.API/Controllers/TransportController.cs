@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Simbir.GO.Application.Contracts.Transports;
 using Simbir.GO.Application.Interfaces;
 using Simbir.GO.Shared.Presentation;
 
 namespace Simbir.GO.API.Controllers;
 
+[Route("api/Transport")]
 public class TransportController : ApiController
 {
     private readonly ITransportService _transportService;
@@ -15,6 +17,7 @@ public class TransportController : ApiController
     }
 
     [HttpGet("{id:long}")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetTransport(long id)
     {
         var result = await _transportService.GetTransportByIdAsync(id);

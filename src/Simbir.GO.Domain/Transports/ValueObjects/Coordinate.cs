@@ -1,4 +1,5 @@
 ﻿using FluentResults;
+using Simbir.GO.Domain.Transports.Errors;
 using Simbir.GO.Shared.Entities;
 
 namespace Simbir.GO.Domain.Transports.ValueObjects;
@@ -13,7 +14,12 @@ public class Coordinate : ValueObject
 
     public static Result<Coordinate> Create(double latitude, double longitude)
     {
-        //Add validation
+        if (latitude is < -90 or > 90)
+            return new OutOfRangeLatitudeError(latitude);
+        
+        if (longitude is < -180 or > 180)
+            return new OutOfRangeLongitudeError(longitude);
+        
         return new Coordinate(latitude, longitude);
     }
     

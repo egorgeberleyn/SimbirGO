@@ -51,7 +51,7 @@ public class AdminTransportService : IAdminTransportService
         if (transport is null)
             return new Error("");
 
-        var updatedTransport = transport.Update(request.CanBeRented, request.TransportType,
+        var updatedTransport = transport.Update(transport.OwnerId, request.CanBeRented, request.TransportType,
             request.Model, request.Color, request.Identifier, request.Description,
             request.MinutePrice, request.DayPrice, request.Latitude, request.Longitude);
         

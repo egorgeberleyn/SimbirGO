@@ -1,6 +1,6 @@
 ﻿namespace Simbir.GO.Application.Contracts.Rents;
 
-public record GetRentalTransportRequest(
+public record SearchTransportParams(
     double Lat, 
     double Long,
     double Radius,

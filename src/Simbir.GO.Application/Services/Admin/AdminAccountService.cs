@@ -60,7 +60,7 @@ public class AdminAccountService : IAdminAccountService
     {
         var account = await _accountRepository.GetByIdAsync(id);
         if(account is null)
-            return new NotExistsAccountError();
+            return new NotFoundAccountError();
         
         var (hash, salt) = _passwordHasher.HashPassword(request.Password);
         var role = request.IsAdmin ? nameof(Role.Admin) : nameof(Role.Client);
@@ -77,7 +77,7 @@ public class AdminAccountService : IAdminAccountService
     {
         var account = await _accountRepository.GetByIdAsync(id);
         if(account is null)
-            return new NotExistsAccountError();
+            return new NotFoundAccountError();
         
         _accountRepository.Delete(account);
         await _dbContext.SaveChangesAsync();

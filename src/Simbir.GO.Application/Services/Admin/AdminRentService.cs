@@ -37,7 +37,7 @@ public class AdminRentService : IAdminRentService
     {
         var account = await _accountRepository.GetByIdAsync(accountId);
         if (account is null)
-            return new NotExistsAccountError();
+            return new NotFoundAccountError();
 
         var byAccountSpec = new ByAccountSpec(accountId);
         var accountRents = await _rentRepository.GetAllByAsync(byAccountSpec);
