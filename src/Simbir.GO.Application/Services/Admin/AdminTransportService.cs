@@ -3,7 +3,11 @@ using Simbir.GO.Application.Contracts.Admin.Transports;
 using Simbir.GO.Application.Interfaces;
 using Simbir.GO.Application.Interfaces.Persistence;
 using Simbir.GO.Application.Interfaces.Persistence.Repositories;
+using Simbir.GO.Application.Specifications.Transports;
 using Simbir.GO.Domain.Transports;
+using Simbir.GO.Domain.Transports.Enums;
+using Simbir.GO.Domain.Transports.Errors;
+using Simbir.GO.Shared.Persistence.Specifications;
 
 namespace Simbir.GO.Application.Services.Admin;
 
@@ -18,16 +22,22 @@ public class AdminTransportService : IAdminTransportService
         _transportRepository = transportRepository;
     }
 
-    public Task<Result<List<Transport>>> GetTransportsAsync(int start, int count)
+    public async Task<Result<List<Transport>>> GetTransportsAsync(SelectTransportParams selectParams)
     {
-        throw new NotImplementedException();
+        Specification<Transport> byCountFilterAndTypeSpec;
+        if(selectParams.TransportType.Equals(nameof(TransportType.All), StringComparison.OrdinalIgnoreCase))
+            byCountFilterAndTypeSpec = new ByCountFilterAndTypeSpec(selectParams.Start, selectParams.Count, 
+                selectParams.TransportType);
+        else
+            byCountFilterAndTypeSpec = new ByCountFilterAndTypeSpec(selectParams.Start, selectParams.Count);
+        return await _transportRepository.GetAllByAsync(byCountFilterAndTypeSpec);
     }
 
     public async Task<Result<Transport>> GetTransportAsync(long id)
     {
         var transport = await _transportRepository.GetByIdAsync(id);
         if (transport is null)
-            return new Error("");
+            return new NotFoundTransportError();
 
         return transport;
     }
@@ -38,7 +48,7 @@ public class AdminTransportService : IAdminTransportService
             request.Model, request.Color, request.Identifier, request.Description, 
             request.MinutePrice, request.DayPrice, request.Latitude, request.Longitude);
         if (createdTransport.IsFailed)
-            return Result.Fail(createdTransport.Errors[0]);
+            return Result.Fail(createdTransport.Errors);
 
         await _transportRepository.AddAsync(createdTransport.Value);
         await _dbContext.SaveChangesAsync();
@@ -49,9 +59,9 @@ public class AdminTransportService : IAdminTransportService
     {
         var transport = await _transportRepository.GetByIdAsync(id);
         if (transport is null)
-            return new Error("");
+            return new NotFoundTransportError();
 
-        var updatedTransport = transport.Update(transport.OwnerId, request.CanBeRented, request.TransportType,
+        var updatedTransport = transport.Update(request.CanBeRented, request.TransportType,
             request.Model, request.Color, request.Identifier, request.Description,
             request.MinutePrice, request.DayPrice, request.Latitude, request.Longitude);
         
@@ -64,7 +74,7 @@ public class AdminTransportService : IAdminTransportService
     {
         var transport = await _transportRepository.GetByIdAsync(id);
         if (transport is null)
-            return new Error("");
+            return new NotFoundTransportError();
         
         _transportRepository.Delete(transport);
         await _dbContext.SaveChangesAsync();

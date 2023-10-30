@@ -7,6 +7,7 @@ using Simbir.GO.Application.Interfaces.Persistence.Repositories;
 using Simbir.GO.Application.Services.Common;
 using Simbir.GO.Application.Specifications.Accounts;
 using Simbir.GO.Domain.Accounts;
+using Simbir.GO.Domain.Accounts.Enums;
 using Simbir.GO.Domain.Accounts.Errors;
 
 namespace Simbir.GO.Application.Services;
@@ -60,7 +61,7 @@ public class AccountService : IAccountService
             return new AlreadyExistsAccountError(request.Username);
         
         var (hash, salt) = _passwordHasher.HashPassword(request.Password);
-        var createdAccount = Account.Create(request.Username, hash, salt, balanceValue: 0, role: "Client");
+        var createdAccount = Account.Create(request.Username, hash, salt, balanceValue: 0, role: nameof(Role.Client));
         if (createdAccount.IsFailed)
             return Result.Fail(createdAccount.Errors);
         

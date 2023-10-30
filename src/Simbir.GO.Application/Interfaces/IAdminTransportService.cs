@@ -6,7 +6,7 @@ namespace Simbir.GO.Application.Interfaces;
 
 public interface IAdminTransportService
 {
-    Task<Result<List<Transport>>> GetTransportsAsync(int start, int count);
+    Task<Result<List<Transport>>> GetTransportsAsync(SelectTransportParams selectParams);
     Task<Result<Transport>> GetTransportAsync(long id);
 
     Task<Result<long>> CreateTransportAsync(CreateTransportRequest request);

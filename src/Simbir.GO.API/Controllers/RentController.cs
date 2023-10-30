@@ -18,9 +18,9 @@ public class RentController : ApiController
 
     [HttpGet("Transport")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetRentalTransport(SearchTransportParams request)
+    public async Task<IActionResult> GetRentalTransport([FromQuery]SearchTransportParams @params)
     {
-        var result = await _rentService.GetRentalTransportAsync(request);
+        var result = await _rentService.GetRentalTransportAsync(@params);
         return result switch {
             { IsFailed: true } => Problem(),
             { IsSuccess: true } => Ok(result.Value),

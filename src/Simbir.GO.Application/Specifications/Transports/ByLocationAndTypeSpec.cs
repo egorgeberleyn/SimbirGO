@@ -9,9 +9,9 @@ public class ByLocationAndTypeSpec : Specification<Transport>
 {
     public ByLocationAndTypeSpec(LocationFinder locationFinder, 
         SearchTransportParams searchParams) 
-        : base(t => locationFinder
-                        .CalculateDistance(searchParams.Lat, searchParams.Long, t.Coordinate) <= searchParams.Radius
-                        && t.TransportType.ToString().Equals(searchParams.Type, StringComparison.OrdinalIgnoreCase))
+        : base(t => t.CanBeRented
+            && locationFinder.CalculateDistance(searchParams.Lat, searchParams.Long, t.Coordinate) <= searchParams.Radius
+            && t.TransportType.ToString().Equals(searchParams.Type, StringComparison.OrdinalIgnoreCase))
     {
     }
 }

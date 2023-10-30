@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Simbir.GO.Application.Contracts.Admin.Rents;
 using Simbir.GO.Application.Interfaces;
 using Simbir.GO.Shared.Presentation;
 
 namespace Simbir.GO.API.Controllers.Admin;
 
-[Route("Admin")]
+[Route("api/Admin")]
+[Authorize(Roles = "Admin")]
 public class AdminRentController : ApiController
 {
     private readonly IAdminRentService _adminRentService;

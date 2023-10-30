@@ -57,7 +57,11 @@ public sealed class TransportService : ITransportService
         if(transport is null)
             return new NotFoundTransportError();
 
-        var updatedTransport = transport.Update(ownerId, request.CanBeRented, request.TransportType, request.Model,
+        var ownResult = transport.CheckOwner(ownerId);
+        if (ownResult.IsFailed)
+            return Result.Fail(ownResult.Errors);
+        
+        var updatedTransport = transport.Update(request.CanBeRented, request.TransportType, request.Model,
             request.Color, request.Identifier, request.Description, request.MinutePrice, request.DayPrice,
             request.Latitude, request.Longitude);
         if (updatedTransport.IsFailed)

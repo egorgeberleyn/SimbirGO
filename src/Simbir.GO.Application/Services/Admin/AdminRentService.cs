@@ -6,6 +6,9 @@ using Simbir.GO.Application.Interfaces.Persistence.Repositories;
 using Simbir.GO.Application.Specifications.Rents;
 using Simbir.GO.Domain.Accounts.Errors;
 using Simbir.GO.Domain.Rents;
+using Simbir.GO.Domain.Rents.Errors;
+using Simbir.GO.Domain.Transports.Errors;
+using Simbir.GO.Domain.Transports.ValueObjects;
 
 namespace Simbir.GO.Application.Services.Admin;
 
@@ -29,7 +32,7 @@ public class AdminRentService : IAdminRentService
     {
         var rent = await _rentRepository.GetByIdAsync(rentId);
         return rent is null 
-            ? new Error("")
+            ? new NotFoundRentError()
             : rent;
     }
 
@@ -49,7 +52,7 @@ public class AdminRentService : IAdminRentService
     {
         var transport = await _transportRepository.GetByIdAsync(transportId);
         if (transport is null)
-            return new Error("");
+            return new NotFoundTransportError();
 
         var byTransportSpec = new ByTransportSpec(transportId);
         var transportRents = await _rentRepository.GetAllByAsync(byTransportSpec);
@@ -61,10 +64,12 @@ public class AdminRentService : IAdminRentService
     {
         var transport = await _transportRepository.GetByIdAsync(request.TransportId);
         if (transport is null)
-            return new Error("");
+            return new NotFoundTransportError();
         
         var startedRent = Rent.Create(transport.Id, request.UserId, request.TimeStart, request.TimeEnd,
             request.PriceOfUnit, request.PriceType, request.FinalPrice);
+        if(startedRent.IsFailed)
+            return Result.Fail(startedRent.Errors);
 
         await _rentRepository.AddAsync(startedRent.Value);
         await _dbContext.SaveChangesAsync();
@@ -75,23 +80,37 @@ public class AdminRentService : IAdminRentService
     {
         var rent = await _rentRepository.GetByIdAsync(rentId);
         if (rent is null)
-            return new Error("");
+            return new NotFoundRentError();
 
-        var endedRent = rent.End();
+        if (await _transportRepository.GetByIdAsync(rent.TransportId) is not { } rentedTransport)
+            return new NotFoundTransportError();
         
-        _rentRepository.Update(endedRent.Value);
+        var (_, isFailed, endedRent, errors) = rent.End();
+        if (isFailed) return Result.Fail(errors);
+        _rentRepository.Update(endedRent);
+        
+        //Update transport location
+        var newCoordinate = Coordinate.Create(request.Lat, request.Long);
+        if(newCoordinate.IsFailed)
+            return Result.Fail(newCoordinate.Errors);
+        rentedTransport.SetLocation(newCoordinate.Value);
+        _transportRepository.Update(rentedTransport);
+        
+        _rentRepository.Update(endedRent);
         await _dbContext.SaveChangesAsync();
-        return endedRent.Value.Id;
+        return endedRent.Id;
     }
 
     public async Task<Result<long>> UpdateRentAsync(long rentId, UpdateRentRequest request)
     {
         var rent = await _rentRepository.GetByIdAsync(rentId);
         if (rent is null)
-            return new Error("");
+            return new NotFoundRentError();
 
         var updatedRent = rent.Update(request.TransportId, request.UserId, request.TimeStart, request.TimeEnd,
             request.PriceOfUnit, request.PriceType, request.FinalPrice);
+        if(updatedRent.IsFailed)
+            return Result.Fail(updatedRent.Errors);
         
         _rentRepository.Update(updatedRent.Value);
         await _dbContext.SaveChangesAsync();
@@ -102,7 +121,7 @@ public class AdminRentService : IAdminRentService
     {
         var rent = await _rentRepository.GetByIdAsync(rentId);
         if (rent is null)
-            return new Error("");
+            return new NotFoundRentError();
         
         _rentRepository.Delete(rent);
         await _dbContext.SaveChangesAsync();

@@ -9,6 +9,7 @@ using Simbir.GO.Application.Interfaces.Auth;
 using Simbir.GO.Application.Interfaces.Persistence;
 using Simbir.GO.Application.Interfaces.Persistence.Repositories;
 using Simbir.GO.Infrastructure.Auth;
+using Simbir.GO.Infrastructure.Auth.Utils;
 using Simbir.GO.Infrastructure.Persistence;
 using Simbir.GO.Infrastructure.Persistence.Repositories;
 using Simbir.GO.Shared.Persistence.Repositories;
@@ -63,6 +64,10 @@ public static class DependencyInjection
                 IssuerSigningKey = new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes(jwtSettings.Secret))
             });
+
+        services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUserContext, CurrentUserContext>();
+        services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
         return services;
     }

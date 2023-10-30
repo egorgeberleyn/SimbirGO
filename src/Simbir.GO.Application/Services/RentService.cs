@@ -102,6 +102,9 @@ public class RentService : IRentService
         if (transport is null)
             return new NotFoundTransportError();
 
+        if (!transport.CanBeRented)
+            return new NotCanBeRentedError();
+
         if (transport.OwnerId == accountId)
             return new RentOfOwnTransportError();
         

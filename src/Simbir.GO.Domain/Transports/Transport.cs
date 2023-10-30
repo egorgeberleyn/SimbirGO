@@ -49,13 +49,9 @@ public class Transport : Entity
             description, minutePrice, dayPrice, newCoordinate.Value);
     }
     
-    public Result<Transport> Update(long ownerId, bool canBeRented, string type, string model, string color,
+    public Result<Transport> Update(bool canBeRented, string type, string model, string color,
         string identifier, string description, double? minutePrice, double? dayPrice, double latitude, double longitude)
     {
-        var ownResult = CheckOwner(ownerId);
-        if (ownResult.IsFailed)
-            return Result.Fail(ownResult.Errors);
-        
         var (_, isFailed, transportType, errors) = Validate(type);
         if (isFailed)
             return Result.Fail(errors);

@@ -25,16 +25,17 @@ public class AdminAccountService : IAdminAccountService
         _passwordHasher = passwordHasher;
     }
 
-    public Task<Result<List<Account>>> GetAccountsAsync(int start, int count)
+    public async Task<Result<List<Account>>> GetAccountsAsync(int start, int count)
     {
-        throw new NotImplementedException();
+        var byCountFilterSpec = new ByCountFilterSpec(start, count);
+        return await _accountRepository.GetAllByAsync(byCountFilterSpec);
     }
 
     public async Task<Result<Account>> GetAccountAsync(long id)
     {
         var account = await _accountRepository.GetByIdAsync(id);
         return account is null
-            ? new Error("")
+            ? new NotFoundAccountError()
             : account;
     }
 
@@ -42,14 +43,14 @@ public class AdminAccountService : IAdminAccountService
     {
         var usernameSpec = new ByUsernameSpec(request.Username);
         if (await _accountRepository.GetByAsync(usernameSpec) is not null)
-            return new Error("");
+            return new AlreadyExistsAccountError(request.Username);
         
         var (hash, salt) = _passwordHasher.HashPassword(request.Password);
 
         var role = request.IsAdmin ? nameof(Role.Admin) : nameof(Role.Client);
         var createdAccount = Account.Create(request.Username, hash, salt, request.Balance, role);
         if (createdAccount.IsFailed)
-            return Result.Fail(createdAccount.Errors[0]);
+            return Result.Fail(createdAccount.Errors);
         
         await _accountRepository.AddAsync(createdAccount.Value);
         await _dbContext.SaveChangesAsync();
@@ -62,11 +63,15 @@ public class AdminAccountService : IAdminAccountService
         if(account is null)
             return new NotFoundAccountError();
         
+        var usernameSpec = new ByUsernameSpec(request.Username);
+        if (await _accountRepository.GetByAsync(usernameSpec) is not null)
+            return new AlreadyExistsAccountError(request.Username);
+        
         var (hash, salt) = _passwordHasher.HashPassword(request.Password);
         var role = request.IsAdmin ? nameof(Role.Admin) : nameof(Role.Client);
         var updatedAccount = account.Update(request.Username, hash, salt, request.Balance, role);
         if(updatedAccount.IsFailed)
-            return Result.Fail(updatedAccount.Errors[0]);
+            return Result.Fail(updatedAccount.Errors);
 
         _accountRepository.Update(updatedAccount.Value);
         await _dbContext.SaveChangesAsync();

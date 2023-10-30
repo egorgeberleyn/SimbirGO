@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Simbir.GO.Application.Contracts.Admin.Transports;
 using Simbir.GO.Application.Interfaces;
 using Simbir.GO.Shared.Presentation;
 
 namespace Simbir.GO.API.Controllers.Admin;
 
-[Route("Admin/Transport")]
+[Route("api/Admin/Transport")]
+[Authorize(Roles = "Admin")]
 public class AdminTransportController : ApiController
 {
     private readonly IAdminTransportService _adminTransportService;
@@ -16,9 +18,9 @@ public class AdminTransportController : ApiController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll(int start, int count)
+    public async Task<IActionResult> GetAll([FromQuery]SelectTransportParams @params)
     {
-        var result = await _adminTransportService.GetTransportsAsync(start, count);
+        var result = await _adminTransportService.GetTransportsAsync(@params);
         return result switch {
             { IsFailed: true } => Problem(),
             { IsSuccess: true } => Ok(result.Value),
