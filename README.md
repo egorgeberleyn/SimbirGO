@@ -32,6 +32,7 @@
 * [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/)
 * [Mapster](https://github.com/MapsterMapper/Mapster)
 * [PostgreSQL](https://www.postgresql.org/)
+* [FluentResults](https://github.com/altmann/FluentResults)
   
 
 #### Запуск
