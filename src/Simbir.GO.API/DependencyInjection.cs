@@ -1,4 +1,5 @@
-﻿ using Microsoft.OpenApi.Models;
+﻿ using System.Reflection;
+ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 
 namespace Simbir.GO.API;
@@ -28,9 +29,9 @@ public static class DependencyInjection
             options.OperationFilter<SecurityRequirementsOperationFilter>();
             options.SwaggerDoc("v1", new OpenApiInfo { Title = "Simbir GO API", Version = "v1" });
 
-            /*var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            options.IncludeXmlComments(xmlPath);*/
+            options.IncludeXmlComments(xmlPath);
         });
     }
 }

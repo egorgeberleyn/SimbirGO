@@ -17,6 +17,11 @@ public class AdminRentController : ApiController
         _adminRentService = adminRentService;
     }
 
+    /// <summary>
+    /// Получение информации по аренде по id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet("Rent/{id:long}")]
     public async Task<IActionResult> Get(long id)
     {
@@ -28,6 +33,11 @@ public class AdminRentController : ApiController
         };
     }
     
+    /// <summary>
+    /// Получение истории аренд пользователя с id={userId}
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
     [HttpGet("UserHistory/{userId:long}")]
     public async Task<IActionResult> GetUserHistory(long userId)
     {
@@ -39,6 +49,11 @@ public class AdminRentController : ApiController
         };
     }
     
+    /// <summary>
+    /// Получение истории аренд транспорта с id={transportId}
+    /// </summary>
+    /// <param name="transportId"></param>
+    /// <returns></returns>
     [HttpGet("TransportHistory{transportId:long}")]
     public async Task<IActionResult> GetTransportHistory(long transportId)
     {
@@ -50,6 +65,11 @@ public class AdminRentController : ApiController
         };
     }
     
+    /// <summary>
+    /// Создание новой аренды
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost("Rent")]
     public async Task<IActionResult> Create(CreateRentRequest request)
     {
@@ -61,6 +81,12 @@ public class AdminRentController : ApiController
         };
     }
     
+    /// <summary>
+    /// Завершение аренды транспорта по id аренды
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost("Rent/End/{id:long}")]
     public async Task<IActionResult> End(long id, AdminEndRentRequest request)
     {
@@ -72,6 +98,12 @@ public class AdminRentController : ApiController
         };
     }
     
+    /// <summary>
+    /// Изменение записи об аренде по id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPut("Rent/{id:long}")]
     public async Task<IActionResult> Update(long id, UpdateRentRequest request)
     {
@@ -83,6 +115,11 @@ public class AdminRentController : ApiController
         };
     }
     
+    /// <summary>
+    /// Удаление информации об аренде по id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpDelete("Rent/{id:long}")]
     public async Task<IActionResult> Delete(long id)
     {

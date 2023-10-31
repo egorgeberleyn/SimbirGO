@@ -7,6 +7,6 @@ public class ByAccountSpec : Specification<Rent>
 {
     public ByAccountSpec(long accountId) : base(ar => ar.UserId == accountId)
     {
-        
+        AddOrderBy(t => t.TimeStart);
     }
 }

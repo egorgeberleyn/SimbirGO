@@ -17,6 +17,11 @@ public class AdminTransportController : ApiController
         _adminTransportService = adminTransportService;
     }
 
+    /// <summary>
+    /// Получение списка всех транспортных средств
+    /// </summary>
+    /// <param name="params"></param>
+    /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery]SelectTransportParams @params)
     {
@@ -28,6 +33,11 @@ public class AdminTransportController : ApiController
         };
     }
     
+    /// <summary>
+    /// Получение информации о транспортном средстве по id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet("{id:long}")]
     public async Task<IActionResult> Get(long id)
     {
@@ -39,6 +49,11 @@ public class AdminTransportController : ApiController
         };
     }
     
+    /// <summary>
+    /// Создание нового транспортного средства
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> Create(CreateTransportRequest request)
     {
@@ -50,6 +65,12 @@ public class AdminTransportController : ApiController
         };
     }
     
+    /// <summary>
+    /// Изменение транспортного средства по id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPut("{id:long}")]
     public async Task<IActionResult> Update(long id, AdminUpdateTransportRequest request)
     {
@@ -61,6 +82,11 @@ public class AdminTransportController : ApiController
         };
     }
     
+    /// <summary>
+    /// Удаление транспорта по id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpDelete("{id:long}")]
     public async Task<IActionResult> Delete(long id)
     {

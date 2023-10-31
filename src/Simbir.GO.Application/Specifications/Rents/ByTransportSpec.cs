@@ -7,6 +7,6 @@ public class ByTransportSpec : Specification<Rent>
 {
     public ByTransportSpec(long transportId) : base(ar => ar.TransportId == transportId)
     {
-        
+        AddOrderBy(t => t.TimeStart);
     }
 }

@@ -16,9 +16,14 @@ public class TransportController : ApiController
         _transportService = transportService;
     }
 
+    /// <summary>
+    /// Получение информации о транспорте по id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet("{id:long}")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetTransport(long id)
+    public async Task<IActionResult> Get(long id)
     {
         var result = await _transportService.GetTransportByIdAsync(id);
         return result switch {
@@ -28,8 +33,13 @@ public class TransportController : ApiController
         };
     }
     
+    /// <summary>
+    /// Добавление нового транспорта
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost]
-    public async Task<IActionResult> AddTransport(AddTransportRequest request)
+    public async Task<IActionResult> Add(AddTransportRequest request)
     {
         var result = await _transportService.AddTransportAsync(request);
         return result switch {
@@ -39,8 +49,14 @@ public class TransportController : ApiController
         };
     }
     
+    /// <summary>
+    /// Изменение транспорта оп id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPut("{id:long}")]
-    public async Task<IActionResult> UpdateTransport(long id, UpdateTransportRequest request)
+    public async Task<IActionResult> Update(long id, UpdateTransportRequest request)
     {
         var result = await _transportService.UpdateTransportAsync(id, request);
         return result switch {
@@ -50,8 +66,13 @@ public class TransportController : ApiController
         };
     }
     
+    /// <summary>
+    /// Удаление транспорта по id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpDelete("{id:long}")]
-    public async Task<IActionResult> DeleteTransport(long id)
+    public async Task<IActionResult> Delete(long id)
     {
         var result = await _transportService.DeleteTransportAsync(id);
         return result switch {

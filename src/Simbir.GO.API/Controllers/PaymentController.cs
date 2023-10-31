@@ -13,8 +13,13 @@ public class PaymentController : ApiController
         _paymentService = paymentService;
     }
 
+    /// <summary>
+    /// Добавляет на баланс аккаунта с id={accountId} 250 000 денежных единиц
+    /// </summary>
+    /// <param name="accountId"></param>
+    /// <returns></returns>
     [HttpPost("{accountId:long}")]
-    public async Task<IActionResult> PaymentHesoyam(long accountId)
+    public async Task<IActionResult> Hesoyam(long accountId)
     {
         var result = await _paymentService.PaymentHesoyamAsync(accountId);
         return result switch {

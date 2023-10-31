@@ -16,8 +16,12 @@ public class AccountController : ApiController
         _accountService = accountService;
     }
 
+    /// <summary>
+    /// Получение данных о текущем аккаунте
+    /// </summary>
+    /// <returns></returns>
     [HttpGet("Me")]
-    public async Task<IActionResult> GetCurrentAccount()
+    public async Task<IActionResult> GetCurrent()
     {
         var result = await _accountService.GetCurrentAccountAsync();
         return result switch {
@@ -27,6 +31,11 @@ public class AccountController : ApiController
         };
     }
     
+    /// <summary>
+    /// Получение нового jwt токена пользователя
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost("SignIn")]
     [AllowAnonymous]
     public async Task<IActionResult> SignIn(SignInAccountRequest request)
@@ -39,6 +48,11 @@ public class AccountController : ApiController
         };
     }
     
+    /// <summary>
+    /// Регистрация нового аккаунта
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost("SignUp")]
     [AllowAnonymous]
     public async Task<IActionResult> SignUp(SignUpAccountRequest request)
@@ -51,6 +65,10 @@ public class AccountController : ApiController
         };
     }
     
+    /// <summary>
+    /// Выход из аккаунта
+    /// </summary>
+    /// <returns></returns>
     [HttpPost("SignOut")]
     public new async Task<IActionResult> SignOut()
     {
@@ -58,8 +76,13 @@ public class AccountController : ApiController
         return Ok();
     }
     
+    /// <summary>
+    /// Обновление своего аккаунта
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPut("Update")]
-    public new async Task<IActionResult> UpdateAccount(UpdateAccountRequest request)
+    public new async Task<IActionResult> Update(UpdateAccountRequest request)
     {
         var updateAccountResult = await _accountService.UpdateAccountAsync(request);
         return updateAccountResult switch {

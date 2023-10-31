@@ -16,9 +16,14 @@ public class RentController : ApiController
         _rentService = rentService;
     }
 
+    /// <summary>
+    /// Получение транспорта доступного для аренды по параметрам
+    /// </summary>
+    /// <param name="params"></param>
+    /// <returns></returns>
     [HttpGet("Transport")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetRentalTransport([FromQuery]SearchTransportParams @params)
+    public async Task<IActionResult> SearchTransport([FromQuery]SearchTransportParams @params)
     {
         var result = await _rentService.GetRentalTransportAsync(@params);
         return result switch {
@@ -28,8 +33,13 @@ public class RentController : ApiController
         };
     }
     
+    /// <summary>
+    /// Получение информации об аренде по id
+    /// </summary>
+    /// <param name="rentId"></param>
+    /// <returns></returns>
     [HttpGet("{rentId:long}")]
-    public async Task<IActionResult> GetRent(long rentId)
+    public async Task<IActionResult> Get(long rentId)
     {
         var result = await _rentService.GetRentByIdAsync(rentId);
         return result switch {
@@ -39,6 +49,10 @@ public class RentController : ApiController
         };
     }
     
+    /// <summary>
+    /// Получение истории аренд текущего аккаунта
+    /// </summary>
+    /// <returns></returns>
     [HttpGet("MyHistory")]
     public async Task<IActionResult> GetMyRentHistory()
     {
@@ -50,6 +64,11 @@ public class RentController : ApiController
         };
     }
     
+    /// <summary>
+    /// Получение истории аренд транспорта
+    /// </summary>
+    /// <param name="transportId"></param>
+    /// <returns></returns>
     [HttpGet("TransportHistory/{transportId:long}")]
     public async Task<IActionResult> GetTransportRentHistory(long transportId)
     {
@@ -61,8 +80,14 @@ public class RentController : ApiController
         };
     }
     
+    /// <summary>
+    /// Аренда транспорта в личное пользование
+    /// </summary>
+    /// <param name="transportId"></param>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost("New/{transportId:long}")]
-    public async Task<IActionResult> StartNewRent(long transportId, StartRentRequest request)
+    public async Task<IActionResult> StartNew(long transportId, StartRentRequest request)
     {
         var result = await _rentService.StartRentAsync(transportId, request);
         return result switch {
@@ -72,8 +97,14 @@ public class RentController : ApiController
         };
     }
     
+    /// <summary>
+    /// Завершение аренды транспорта по id аренды
+    /// </summary>
+    /// <param name="rentId"></param>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost("End/{rentId:long}")]
-    public async Task<IActionResult> StartNewRent(long rentId, EndRentRequest request)
+    public async Task<IActionResult> End(long rentId, EndRentRequest request)
     {
         var result = await _rentService.EndRentAsync(rentId, request);
         return result switch {

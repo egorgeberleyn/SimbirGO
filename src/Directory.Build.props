@@ -5,5 +5,7 @@
         <LangVersion>latest</LangVersion>
         <NeutralLanguage>en</NeutralLanguage>
         <TargetFramework>net7.0</TargetFramework>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>$(NoWarn);1591</NoWarn>
     </PropertyGroup>
 </Project>
