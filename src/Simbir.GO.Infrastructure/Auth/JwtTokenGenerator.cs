@@ -6,7 +6,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Simbir.GO.Application.Interfaces;
 using Simbir.GO.Application.Interfaces.Auth;
-using Simbir.GO.Application.Interfaces.Persistence.Repositories;
 using Simbir.GO.Domain.Accounts;
 using Simbir.GO.Infrastructure.Persistence;
 

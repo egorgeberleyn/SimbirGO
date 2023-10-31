@@ -1,5 +1,7 @@
 ﻿ using System.Reflection;
  using System.Text.Json.Serialization;
+ using Mapster;
+ using MapsterMapper;
  using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 
@@ -16,6 +18,7 @@ public static class DependencyInjection
             });
         services.AddEndpointsApiExplorer();
         services.AddSwagger();
+        services.AddMapper();
         return services;
     }
     
@@ -38,5 +41,15 @@ public static class DependencyInjection
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             options.IncludeXmlComments(xmlPath);
         });
+    }
+    
+    private static IServiceCollection AddMapper(this IServiceCollection services)
+    {
+        var config = TypeAdapterConfig.GlobalSettings;
+        config.Scan(Assembly.GetExecutingAssembly());
+
+        services.AddSingleton(config);
+        services.AddScoped<IMapper, ServiceMapper>();
+        return services;
     }
 }

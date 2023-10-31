@@ -112,7 +112,9 @@ public class Rent : Entity
         if (!DateTime.TryParse(timeEnd, out var rentTimeEnd))
             return Result.Fail(new IncorrectTimeFormatError());
 
-        return new ValidateProps(rentPriceType, rentTimeStart, rentTimeEnd);
+        return new ValidateProps(rentPriceType, 
+            rentTimeStart.ToUniversalTime(), 
+            rentTimeEnd.ToUniversalTime());
     }
     
     #pragma warning disable CS8618

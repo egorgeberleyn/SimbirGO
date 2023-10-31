@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Simbir.GO.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using Simbir.GO.Infrastructure.Persistence;
 namespace Simbir.GO.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231031190232_AddRevokedToken")]
+    partial class AddRevokedToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,9 +57,9 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
                         .HasColumnName("user_id");
 
                     b.HasKey("Id")
-                        .HasName("pk_revoked_tokens");
+                        .HasName("pk_refresh_tokens");
 
-                    b.ToTable("revoked_tokens", (string)null);
+                    b.ToTable("refresh_tokens", (string)null);
                 });
 
             modelBuilder.Entity("Simbir.GO.Domain.Accounts.Account", b =>
@@ -78,9 +81,8 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
                         .HasColumnType("bytea")
                         .HasColumnName("password_salt");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("text")
+                    b.Property<int>("Role")
+                        .HasColumnType("integer")
                         .HasColumnName("role");
 
                     b.Property<string>("Username")
@@ -115,9 +117,8 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
                         .HasColumnType("double precision")
                         .HasColumnName("price_of_unit");
 
-                    b.Property<string>("PriceType")
-                        .IsRequired()
-                        .HasColumnType("text")
+                    b.Property<int>("PriceType")
+                        .HasColumnType("integer")
                         .HasColumnName("price_type");
 
                     b.Property<DateTime?>("TimeEnd")
@@ -188,9 +189,8 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("owner_id");
 
-                    b.Property<string>("TransportType")
-                        .IsRequired()
-                        .HasColumnType("text")
+                    b.Property<int>("TransportType")
+                        .HasColumnType("integer")
                         .HasColumnName("transport_type");
 
                     b.HasKey("Id")

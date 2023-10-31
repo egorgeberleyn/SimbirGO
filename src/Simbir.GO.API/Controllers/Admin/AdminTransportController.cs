@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Simbir.GO.Application.Contracts.Admin.Transports;
-using Simbir.GO.Application.Interfaces;
+using Simbir.GO.Application.Services.Admin;
 using Simbir.GO.Shared.Presentation;
 
 namespace Simbir.GO.API.Controllers.Admin;
@@ -10,9 +10,9 @@ namespace Simbir.GO.API.Controllers.Admin;
 [Authorize(Roles = "Admin")]
 public class AdminTransportController : ApiController
 {
-    private readonly IAdminTransportService _adminTransportService;
+    private readonly AdminTransportService _adminTransportService;
 
-    public AdminTransportController(IAdminTransportService adminTransportService)
+    public AdminTransportController(AdminTransportService adminTransportService)
     {
         _adminTransportService = adminTransportService;
     }

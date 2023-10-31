@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MapsterMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Simbir.GO.Application.Contracts.Admin.Rents;
-using Simbir.GO.Application.Interfaces;
+using Simbir.GO.Application.Contracts.Rents;
+using Simbir.GO.Application.Services.Admin;
 using Simbir.GO.Shared.Presentation;
 
 namespace Simbir.GO.API.Controllers.Admin;
@@ -10,11 +12,13 @@ namespace Simbir.GO.API.Controllers.Admin;
 [Authorize(Roles = "Admin")]
 public class AdminRentController : ApiController
 {
-    private readonly IAdminRentService _adminRentService;
+    private readonly AdminRentService _adminRentService;
+    private readonly IMapper _mapper;
 
-    public AdminRentController(IAdminRentService adminRentService)
+    public AdminRentController(AdminRentService adminRentService, IMapper mapper)
     {
         _adminRentService = adminRentService;
+        _mapper = mapper;
     }
 
     /// <summary>
@@ -28,7 +32,7 @@ public class AdminRentController : ApiController
         var result = await _adminRentService.GetRentByIdAsync(id);
         return result switch {
             { IsFailed: true } => Problem(result.Errors),
-            { IsSuccess: true } => Ok(result.Value),
+            { IsSuccess: true } => Ok(_mapper.Map<RentResponse>(result.Value)),
             _ => NoContent()
         };
     }
@@ -44,7 +48,7 @@ public class AdminRentController : ApiController
         var result = await _adminRentService.GetUserRentHistoryAsync(userId);
         return result switch {
             { IsFailed: true } => Problem(result.Errors),
-            { IsSuccess: true } => Ok(result.Value),
+            { IsSuccess: true } => Ok(_mapper.Map<List<RentResponse>>(result.Value)),
             _ => NoContent()
         };
     }
@@ -59,8 +63,8 @@ public class AdminRentController : ApiController
     {
         var result = await _adminRentService.GetTransportRentHistoryAsync(transportId);
         return result switch {
-            { IsFailed: true } => Problem(),
-            { IsSuccess: true } => Ok(result.Value),
+            { IsFailed: true } => Problem(result.Errors),
+            { IsSuccess: true } => Ok(_mapper.Map<List<RentResponse>>(result.Value)),
             _ => NoContent()
         };
     }

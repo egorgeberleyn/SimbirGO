@@ -1,6 +1,5 @@
 using FluentResults;
 using Simbir.GO.Application.Contracts.Admin.Transports;
-using Simbir.GO.Application.Interfaces;
 using Simbir.GO.Application.Interfaces.Persistence;
 using Simbir.GO.Application.Interfaces.Persistence.Repositories;
 using Simbir.GO.Application.Specifications.Transports;
@@ -11,7 +10,7 @@ using Simbir.GO.Shared.Persistence.Specifications;
 
 namespace Simbir.GO.Application.Services.Admin;
 
-public class AdminTransportService : IAdminTransportService
+public class AdminTransportService
 {
     private readonly IAppDbContext _dbContext;
     private readonly ITransportRepository _transportRepository;

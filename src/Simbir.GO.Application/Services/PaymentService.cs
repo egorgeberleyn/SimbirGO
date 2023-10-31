@@ -1,5 +1,4 @@
 ﻿using FluentResults;
-using Simbir.GO.Application.Interfaces;
 using Simbir.GO.Application.Interfaces.Auth;
 using Simbir.GO.Application.Interfaces.Persistence;
 using Simbir.GO.Application.Interfaces.Persistence.Repositories;
@@ -8,7 +7,7 @@ using Simbir.GO.Domain.Accounts.Errors;
 
 namespace Simbir.GO.Application.Services;
 
-public class PaymentService : IPaymentService
+public class PaymentService
 {
     private readonly IAppDbContext _dbContext;
     private readonly IUserContext _userContext;

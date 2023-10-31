@@ -1,7 +1,6 @@
 ﻿using FluentResults;
 using Microsoft.AspNetCore.Http;
 using Simbir.GO.Application.Contracts.Accounts;
-using Simbir.GO.Application.Interfaces;
 using Simbir.GO.Application.Interfaces.Auth;
 using Simbir.GO.Application.Interfaces.Persistence;
 using Simbir.GO.Application.Interfaces.Persistence.Repositories;
@@ -13,7 +12,7 @@ using Simbir.GO.Domain.Accounts.Errors;
 
 namespace Simbir.GO.Application.Services;
 
-public class AccountService : IAccountService
+public class AccountService
 {
     private readonly IAppDbContext _dbContext;
     private readonly IAccountRepository _accountRepository;
@@ -100,12 +99,12 @@ public class AccountService : IAccountService
     {
         var tokenStr = _contextAccessor.HttpContext?.Request.Headers["Authorization"]
             .ToString()
-            .Replace("Bearer ", string.Empty);
+            .Replace("bearer ", string.Empty);
 
         if (tokenStr is null)
             return new UnauthorizedError();
         
-        var jwtToken = _jwtTokenGenerator.ParseToken(tokenStr!);
+        var jwtToken = _jwtTokenGenerator.ParseToken(tokenStr);
         
         if(!_userContext.TryGetUserId(out var userId))
             return Result.Fail(new NotFoundAccountError());

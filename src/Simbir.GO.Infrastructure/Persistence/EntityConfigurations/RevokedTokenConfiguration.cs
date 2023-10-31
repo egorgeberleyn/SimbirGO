@@ -4,11 +4,11 @@ using Simbir.GO.Application.Services.Common;
 
 namespace Simbir.GO.Infrastructure.Persistence.EntityConfigurations;
 
-public class RefreshTokenConfiguration : IEntityTypeConfiguration<RevokedToken>
+public class RevokedTokenConfiguration : IEntityTypeConfiguration<RevokedToken>
 {
     public void Configure(EntityTypeBuilder<RevokedToken> builder)
     {
-        builder.ToTable("refresh_tokens");
+        builder.ToTable("revoked_tokens");
         builder.HasKey(t => t.Id);
     }
 }

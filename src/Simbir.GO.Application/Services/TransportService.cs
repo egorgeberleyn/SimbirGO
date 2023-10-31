@@ -1,6 +1,5 @@
 ﻿using FluentResults;
 using Simbir.GO.Application.Contracts.Transports;
-using Simbir.GO.Application.Interfaces;
 using Simbir.GO.Application.Interfaces.Auth;
 using Simbir.GO.Application.Interfaces.Persistence;
 using Simbir.GO.Application.Interfaces.Persistence.Repositories;
@@ -10,7 +9,7 @@ using Simbir.GO.Domain.Transports.Errors;
 
 namespace Simbir.GO.Application.Services;
 
-public sealed class TransportService : ITransportService
+public sealed class TransportService
 {
     private readonly ITransportRepository _transportRepository;
     private readonly IAppDbContext _dbContext;

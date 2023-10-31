@@ -1,6 +1,5 @@
 using FluentResults;
 using Simbir.GO.Application.Contracts.Admin.Rents;
-using Simbir.GO.Application.Interfaces;
 using Simbir.GO.Application.Interfaces.Persistence;
 using Simbir.GO.Application.Interfaces.Persistence.Repositories;
 using Simbir.GO.Application.Specifications.Rents;
@@ -12,7 +11,7 @@ using Simbir.GO.Domain.Transports.ValueObjects;
 
 namespace Simbir.GO.Application.Services.Admin;
 
-public class AdminRentService : IAdminRentService
+public class AdminRentService
 {
     private readonly IAppDbContext _dbContext;
     private readonly IRentRepository _rentRepository;
@@ -66,14 +65,14 @@ public class AdminRentService : IAdminRentService
         if (transport is null)
             return new NotFoundTransportError();
         
-        var startedRent = Rent.Create(transport.Id, request.UserId, request.TimeStart, request.TimeEnd,
+        var (_, isFailed, createdRent, errors) = Rent.Create(transport.Id, request.UserId, request.TimeStart, request.TimeEnd,
             request.PriceOfUnit, request.PriceType, request.FinalPrice);
-        if(startedRent.IsFailed)
-            return Result.Fail(startedRent.Errors);
+        if(isFailed)
+            return Result.Fail(errors);
 
-        await _rentRepository.AddAsync(startedRent.Value);
+        await _rentRepository.AddAsync(createdRent);
         await _dbContext.SaveChangesAsync();
-        return new Success($"Rent started at {startedRent.Value.TimeStart}");
+        return new Success($"Rent created at {createdRent.TimeStart}");
     }
 
     public async Task<Result<Success>> AdminEndRentAsync(long rentId, AdminEndRentRequest request)

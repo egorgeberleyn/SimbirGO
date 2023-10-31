@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Simbir.GO.Application.Interfaces;
+using Simbir.GO.Application.Services;
 using Simbir.GO.Shared.Presentation;
 
 namespace Simbir.GO.API.Controllers;
 
 public class PaymentController : ApiController
 {
-    private readonly IPaymentService _paymentService;
+    private readonly PaymentService _paymentService;
 
-    public PaymentController(IPaymentService paymentService)
+    public PaymentController(PaymentService paymentService)
     {
         _paymentService = paymentService;
     }

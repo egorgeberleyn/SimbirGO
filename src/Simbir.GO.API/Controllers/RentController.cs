@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MapsterMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Simbir.GO.Application.Contracts.Rents;
-using Simbir.GO.Application.Interfaces;
+using Simbir.GO.Application.Services;
 using Simbir.GO.Shared.Presentation;
 
 namespace Simbir.GO.API.Controllers;
@@ -9,11 +10,13 @@ namespace Simbir.GO.API.Controllers;
 [Route("api/Rent")]
 public class RentController : ApiController
 {
-    private readonly IRentService _rentService;
+    private readonly RentService _rentService;
+    private readonly IMapper _mapper;
 
-    public RentController(IRentService rentService)
+    public RentController(RentService rentService, IMapper mapper)
     {
         _rentService = rentService;
+        _mapper = mapper;
     }
 
     /// <summary>
@@ -44,7 +47,7 @@ public class RentController : ApiController
         var result = await _rentService.GetRentByIdAsync(rentId);
         return result switch {
             { IsFailed: true } => Problem(result.Errors),
-            { IsSuccess: true } => Ok(result.Value),
+            { IsSuccess: true } => Ok(_mapper.Map<RentResponse>(result.Value)),
             _ => NoContent()
         };
     }
@@ -59,7 +62,7 @@ public class RentController : ApiController
         var result = await _rentService.GetMyRentHistoryAsync();
         return result switch {
             { IsFailed: true } => Problem(result.Errors),
-            { IsSuccess: true } => Ok(result.Value),
+            { IsSuccess: true } => Ok(_mapper.Map<List<RentResponse>>(result.Value)),
             _ => NoContent()
         };
     }
@@ -75,7 +78,7 @@ public class RentController : ApiController
         var result = await _rentService.GetTransportRentHistoryAsync(transportId);
         return result switch {
             { IsFailed: true } => Problem(result.Errors),
-            { IsSuccess: true } => Ok(result.Value),
+            { IsSuccess: true } => Ok(_mapper.Map<List<RentResponse>>(result.Value)),
             _ => NoContent()
         };
     }

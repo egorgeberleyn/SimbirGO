@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MapsterMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Simbir.GO.Application.Contracts.Accounts;
-using Simbir.GO.Application.Interfaces;
+using Simbir.GO.Application.Services;
 using Simbir.GO.Shared.Presentation;
 
 namespace Simbir.GO.API.Controllers;
@@ -9,11 +10,13 @@ namespace Simbir.GO.API.Controllers;
 [Route("api/Account")]
 public class AccountController : ApiController
 {
-    private readonly IAccountService _accountService;
+    private readonly AccountService _accountService;
+    private readonly IMapper _mapper;
 
-    public AccountController(IAccountService accountService)
+    public AccountController(AccountService accountService, IMapper mapper)
     {
         _accountService = accountService;
+        _mapper = mapper;
     }
 
     /// <summary>
@@ -26,7 +29,7 @@ public class AccountController : ApiController
         var result = await _accountService.GetCurrentAccountAsync();
         return result switch {
             { IsFailed: true } => Problem(result.Errors),
-            { IsSuccess: true } => Ok(result.Value),
+            { IsSuccess: true } => Ok(_mapper.Map<AccountResponse>(result.Value)),
             _ => NoContent()
         };
     }

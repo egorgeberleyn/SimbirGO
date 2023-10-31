@@ -42,6 +42,7 @@ public static class DependencyInjection
         
         services.AddScoped<ITransportRepository, TransportRepository>();
         services.AddScoped<IAccountRepository, AccountRepository>();
+        services.AddScoped<IRevokedTokenRepository, RevokedTokenRepository>();
         services.AddScoped<IRentRepository, RentRepository>();
         
         return services;

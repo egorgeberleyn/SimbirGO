@@ -1,6 +1,5 @@
 using FluentResults;
 using Simbir.GO.Application.Contracts.Admin.Accounts;
-using Simbir.GO.Application.Interfaces;
 using Simbir.GO.Application.Interfaces.Auth;
 using Simbir.GO.Application.Interfaces.Persistence;
 using Simbir.GO.Application.Interfaces.Persistence.Repositories;
@@ -11,7 +10,7 @@ using Simbir.GO.Domain.Accounts.Errors;
 
 namespace Simbir.GO.Application.Services.Admin;
 
-public class AdminAccountService : IAdminAccountService
+public class AdminAccountService
 {
     private readonly IAppDbContext _dbContext;
     private readonly IAccountRepository _accountRepository;

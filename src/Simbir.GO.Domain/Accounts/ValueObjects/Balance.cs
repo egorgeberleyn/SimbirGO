@@ -8,9 +8,15 @@ public class Balance : ValueObject
 {
     public double Value { get; init; }
     
-    private Balance(double value) =>
+    private Balance(double value)
+    {
         Value = value;
-
+    }
+    
+    private Balance()
+    {
+    }
+    
     public static Result<Balance> Create(double value)
     {
         if(value < 0)
@@ -18,8 +24,6 @@ public class Balance : ValueObject
         
         return new Balance(value);
     }
-    
-    private Balance() {}
     
     protected override IEnumerable<object?> GetAtomicValues()
     {

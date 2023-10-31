@@ -10,4 +10,9 @@ public class ByCanBeRentAndTypeSpec : Specification<Transport>
         : base(t => t.CanBeRented && t.TransportType == type)
     {
     }
+    
+    public ByCanBeRentAndTypeSpec() 
+        : base(t => t.CanBeRented)
+    {
+    }
 }

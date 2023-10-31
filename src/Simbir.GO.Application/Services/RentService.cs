@@ -1,6 +1,5 @@
 ﻿using FluentResults;
 using Simbir.GO.Application.Contracts.Rents;
-using Simbir.GO.Application.Interfaces;
 using Simbir.GO.Application.Interfaces.Auth;
 using Simbir.GO.Application.Interfaces.Persistence;
 using Simbir.GO.Application.Interfaces.Persistence.Repositories;
@@ -10,13 +9,14 @@ using Simbir.GO.Domain.Accounts.Errors;
 using Simbir.GO.Domain.Rents;
 using Simbir.GO.Domain.Rents.Errors;
 using Simbir.GO.Domain.Transports;
+using Simbir.GO.Domain.Transports.Enums;
 using Simbir.GO.Domain.Transports.Errors;
 using Simbir.GO.Domain.Transports.Services;
 using Simbir.GO.Domain.Transports.ValueObjects;
 
 namespace Simbir.GO.Application.Services;
 
-public class RentService : IRentService
+public class RentService
 {
     private readonly IAppDbContext _dbContext;
     private readonly IUserContext _userContext;
@@ -43,9 +43,11 @@ public class RentService : IRentService
         var (_, isFailed, transportType, errors) = Transport.Validate(searchParams.Type);
         if (isFailed)
             return Result.Fail(errors);
-        
-        var byCanBeRentAndTypeSpec = new ByCanBeRentAndTypeSpec(transportType);
-        var availableTransports = await _transportRepository.GetAllByAsync(byCanBeRentAndTypeSpec);
+
+        var spec = transportType == TransportType.All 
+            ? new ByCanBeRentAndTypeSpec() 
+            : new ByCanBeRentAndTypeSpec(transportType);
+        var availableTransports = await _transportRepository.GetAllByAsync(spec);
         
         return availableTransports
             .Where(t => _locationFinder
@@ -116,13 +118,15 @@ public class RentService : IRentService
         if (transport.OwnerId == accountId)
             return new RentOfOwnTransportError();
         
-        var startedRent = Rent.Start(transportId, accountId, request.RentType, 
+        var (_, isFailed, startedRent, errors) = Rent.Start(transportId, accountId, request.RentType, 
             transport.DayPrice, transport.MinutePrice);
+        if (isFailed)
+            return Result.Fail(errors);
         transport.Rent();
 
-        await _rentRepository.AddAsync(startedRent.Value);
+        await _rentRepository.AddAsync(startedRent);
         await _dbContext.SaveChangesAsync();
-        return new Success($"Rent successfully started at {startedRent.Value.TimeStart}");
+        return new Success($"Rent successfully started at {startedRent.TimeStart}");
     }
 
     public async Task<Result<Success>> EndRentAsync(long rentId, EndRentRequest request)

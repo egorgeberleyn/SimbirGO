@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Simbir.GO.Application.Contracts.Transports;
-using Simbir.GO.Application.Interfaces;
+using Simbir.GO.Application.Services;
 using Simbir.GO.Shared.Presentation;
 
 namespace Simbir.GO.API.Controllers;
@@ -9,9 +9,9 @@ namespace Simbir.GO.API.Controllers;
 [Route("api/Transport")]
 public class TransportController : ApiController
 {
-    private readonly ITransportService _transportService;
+    private readonly TransportService _transportService;
 
-    public TransportController(ITransportService transportService)
+    public TransportController(TransportService transportService)
     {
         _transportService = transportService;
     }
