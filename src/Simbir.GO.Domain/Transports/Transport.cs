@@ -88,14 +88,19 @@ public class Transport : Entity
     {
         Coordinate = coordinate;
     }
-
-    private static Result<TransportType> Validate(string type)
+    
+    public void Rent() => CanBeRented = false;
+    
+    public void Unrent() => CanBeRented = true;
+    
+    
+    public static Result<TransportType> Validate(string type)
     {
         return !Enum.TryParse<TransportType>(type, true, out var transportType) 
             ? Result.Fail(new IncorrectTransportTypeError(type)) 
             : Result.Ok(transportType);
     }
 
-#pragma warning disable CS8618
+    #pragma warning disable CS8618
     private Transport() {}
 }

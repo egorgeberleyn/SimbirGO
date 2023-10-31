@@ -10,21 +10,19 @@ using Simbir.GO.Domain.Transports.Enums;
 
 namespace Simbir.GO.Infrastructure.Persistence;
 
-public class AppDbContext : DbContext, IAppDbContext
+public sealed class AppDbContext : DbContext, IAppDbContext
 {
     public DbSet<Account> Accounts { get; set; } = null!;
     public DbSet<Rent> Rents { get; set; } = null!;
     public DbSet<Transport> Transports { get; set; } = null!;
     public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
-    
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    {
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasPostgresEnum<Role>();
-        modelBuilder.HasPostgresEnum<TransportType>();
-        modelBuilder.HasPostgresEnum<PriceType>();
-        
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
     }

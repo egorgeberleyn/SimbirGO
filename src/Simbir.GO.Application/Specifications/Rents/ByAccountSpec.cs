@@ -5,7 +5,7 @@ namespace Simbir.GO.Application.Specifications.Rents;
 
 public class ByAccountSpec : Specification<Rent>
 {
-    public ByAccountSpec(long accountId) : base(ar => ar.UserId == accountId)
+    public ByAccountSpec(long accountId) : base(ar => ar.AccountId == accountId)
     {
         AddOrderBy(t => t.TimeStart);
     }

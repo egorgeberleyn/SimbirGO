@@ -18,7 +18,6 @@ using Simbir.GO.Infrastructure.Auth.Utils;
 using Simbir.GO.Infrastructure.Persistence;
 using Simbir.GO.Infrastructure.Persistence.Repositories;
 using Simbir.GO.Infrastructure.Utils;
-using Simbir.GO.Shared.Persistence.Repositories;
 
 namespace Simbir.GO.Infrastructure;
 
@@ -37,19 +36,14 @@ public static class DependencyInjection
     
     private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
-        var dataSourceBuilder = new NpgsqlDataSourceBuilder(configuration.GetConnectionString("Postgres"));
-        //Map C# enum -> postgres enum
-        dataSourceBuilder.MapEnum<Role>();
-        dataSourceBuilder.MapEnum<TransportType>();
-        dataSourceBuilder.MapEnum<PriceType>();
-        var dataSource = dataSourceBuilder.Build();
-        
         services.AddScoped<IAppDbContext>(factory => factory.GetRequiredService<AppDbContext>());
         services.AddDbContext<AppDbContext>(options =>
         {
-            options.UseNpgsql(dataSource);
+            options.UseNpgsql(configuration.GetConnectionString("Postgres"));
         });
 
+        services.AddHostedService<DbContextAppInitializer>();
+        
         services.AddScoped<ITransportRepository, TransportRepository>();
         services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddScoped<IRentRepository, RentRepository>();

@@ -50,7 +50,7 @@ public class TransportController : ApiController
     }
     
     /// <summary>
-    /// Изменение транспорта оп id
+    /// Изменение транспорта по id
     /// </summary>
     /// <param name="id"></param>
     /// <param name="request"></param>

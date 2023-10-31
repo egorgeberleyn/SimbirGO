@@ -11,7 +11,7 @@ namespace Simbir.GO.Domain.Rents;
 public class Rent : Entity
 {
     public long TransportId { get; private set; }
-    public long UserId { get; private set; }
+    public long AccountId { get; private set; }
     public DateTime TimeStart { get; private set; }
     public DateTime? TimeEnd { get; private set; }
     public double PriceOfUnit { get; private set; }
@@ -25,7 +25,7 @@ public class Rent : Entity
         PriceType priceType, DateTime timeStart, DateTime? timeEnd = null, double? finalPrice = null)
     {
         TransportId = transportId;
-        UserId = userId;
+        AccountId = userId;
         TimeStart = timeStart;
         TimeEnd = timeEnd;
         PriceOfUnit = priceOfUnit;
@@ -44,7 +44,7 @@ public class Rent : Entity
             validProps.TimeEnd, finalPrice);
     }
     
-    public Result<Rent> Update(long transportId, long userId, string timeStart, string? timeEnd,
+    public Result<Rent> Update(long transportId, long accountId, string timeStart, string? timeEnd,
         double priceOfUnit, string priceType, double? finalPrice)
     {
         var (_, isFailed, validProps, errors) = Validate(priceType, timeStart, timeEnd);
@@ -52,7 +52,7 @@ public class Rent : Entity
             return Result.Fail(errors);
 
         TransportId = transportId;
-        UserId = userId;
+        AccountId = accountId;
         PriceOfUnit = priceOfUnit;
         PriceType = validProps.PriceType;
         TimeStart = validProps.TimeStart;
@@ -82,13 +82,16 @@ public class Rent : Entity
 
     public Result<Rent> End()
     {
+        if (TimeEnd != null)
+            return new ExpiredRentError(TimeEnd.Value);
+        
         TimeEnd = DateTime.UtcNow;
         var time = TimeEnd - TimeStart;
         
         var finalPrice = PriceType switch
         {
             PriceType.Minutes => time.Value.Minutes * PriceOfUnit,
-            PriceType.Days => time.Value.Days * PriceOfUnit,
+            PriceType.Days => (time.Value.Days + 1) * PriceOfUnit,
             PriceType.None => throw new InvalidEnumArgumentException($"{nameof(PriceType)} cannot be None"),
             _ => throw new ArgumentOutOfRangeException($"Argument {nameof(PriceType)} out of range")
         };
@@ -112,6 +115,6 @@ public class Rent : Entity
         return new ValidateProps(rentPriceType, rentTimeStart, rentTimeEnd);
     }
     
-#pragma warning disable CS8618
+    #pragma warning disable CS8618
     private Rent() {}
 }

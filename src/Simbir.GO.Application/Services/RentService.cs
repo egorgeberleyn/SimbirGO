@@ -40,14 +40,22 @@ public class RentService : IRentService
 
     public async Task<Result<List<Transport>>> GetRentalTransportAsync(SearchTransportParams searchParams)
     {
-        var byLocationAndTypeSpec = new ByLocationAndTypeSpec(_locationFinder, searchParams);
-        var availableTransports = await _transportRepository.GetAllByAsync(byLocationAndTypeSpec);
-        return availableTransports;
+        var (_, isFailed, transportType, errors) = Transport.Validate(searchParams.Type);
+        if (isFailed)
+            return Result.Fail(errors);
+        
+        var byCanBeRentAndTypeSpec = new ByCanBeRentAndTypeSpec(transportType);
+        var availableTransports = await _transportRepository.GetAllByAsync(byCanBeRentAndTypeSpec);
+        
+        return availableTransports
+            .Where(t => _locationFinder
+                .CalculateDistance(searchParams.Lat, searchParams.Long, t.Coordinate) <= searchParams.Radius)
+            .ToList();
     }
 
     public async Task<Result<Rent>> GetRentByIdAsync(long rentId)
     {
-        if(_userContext.TryGetUserId(out var userId))
+        if(!_userContext.TryGetUserId(out var userId))
             return new NotFoundAccountError();
         
         var rent = await _rentRepository.GetByIdAsync(rentId);
@@ -58,7 +66,7 @@ public class RentService : IRentService
         if (rentedTransport is null)
             return new NotFoundTransportError();
             
-        if(rent.UserId != userId || rentedTransport.OwnerId != userId)
+        if(rent.AccountId != userId || rentedTransport.OwnerId != userId)
             return new NoAccessToRentError();
             
         return rent;
@@ -66,7 +74,7 @@ public class RentService : IRentService
 
     public async Task<Result<List<Rent>>> GetMyRentHistoryAsync()
     {
-        if(_userContext.TryGetUserId(out var userId))
+        if(!_userContext.TryGetUserId(out var userId))
             return new NotFoundAccountError();
 
         var byAccountSpec = new ByAccountSpec(userId);
@@ -77,7 +85,7 @@ public class RentService : IRentService
 
     public async Task<Result<List<Rent>>> GetTransportRentHistoryAsync(long transportId)
     {
-        if(_userContext.TryGetUserId(out var userId))
+        if(!_userContext.TryGetUserId(out var userId))
             return new NotFoundAccountError();
         
         var transport = await _transportRepository.GetByIdAsync(transportId);
@@ -110,10 +118,11 @@ public class RentService : IRentService
         
         var startedRent = Rent.Start(transportId, accountId, request.RentType, 
             transport.DayPrice, transport.MinutePrice);
+        transport.Rent();
 
         await _rentRepository.AddAsync(startedRent.Value);
         await _dbContext.SaveChangesAsync();
-        return new Success("Rent successfully started");
+        return new Success($"Rent successfully started at {startedRent.Value.TimeStart}");
     }
 
     public async Task<Result<Success>> EndRentAsync(long rentId, EndRentRequest request)
@@ -124,8 +133,8 @@ public class RentService : IRentService
         var rent = await _rentRepository.GetByIdAsync(rentId);
         if (rent is null)
             return new NotFoundRentError();
-
-        if (account.Id != rent.UserId)
+        
+        if (account.Id != rent.AccountId)
             return new NoAccessToRentError();
 
         if (await _transportRepository.GetByIdAsync(rent.TransportId) is not { } rentedTransport)
@@ -140,6 +149,7 @@ public class RentService : IRentService
         if(newCoordinate.IsFailed)
             return Result.Fail(newCoordinate.Errors);
         rentedTransport.SetLocation(newCoordinate.Value);
+        rentedTransport.Unrent();
         _transportRepository.Update(rentedTransport);
         
         //Pay for rent
@@ -151,6 +161,6 @@ public class RentService : IRentService
         _accountRepository.Update(account);
         
         await _dbContext.SaveChangesAsync();
-        return new Success("Rent successfully ended");
+        return new Success($"Rent successfully ended at {endedRent.TimeEnd}");
     }
 }

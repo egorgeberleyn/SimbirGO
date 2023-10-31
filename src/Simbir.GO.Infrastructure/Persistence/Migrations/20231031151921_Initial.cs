@@ -1,9 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using Simbir.GO.Domain.Accounts.Enums;
-using Simbir.GO.Domain.Rents.Enums;
-using Simbir.GO.Domain.Transports.Enums;
 
 #nullable disable
 
@@ -15,11 +12,6 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterDatabase()
-                .Annotation("Npgsql:Enum:price_type", "none,minutes,days")
-                .Annotation("Npgsql:Enum:role", "none,client,admin")
-                .Annotation("Npgsql:Enum:transport_type", "none,car,bike,scooter,all");
-
             migrationBuilder.CreateTable(
                 name: "accounts",
                 columns: table => new
@@ -30,7 +22,7 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
                     password_hash = table.Column<byte[]>(type: "bytea", nullable: false),
                     password_salt = table.Column<byte[]>(type: "bytea", nullable: false),
                     balance_value = table.Column<double>(type: "double precision", nullable: false),
-                    role = table.Column<Role>(type: "role", nullable: false)
+                    role = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,7 +56,7 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     owner_id = table.Column<long>(type: "bigint", nullable: false),
                     can_be_rented = table.Column<bool>(type: "boolean", nullable: false),
-                    transport_type = table.Column<TransportType>(type: "transport_type", nullable: false),
+                    transport_type = table.Column<int>(type: "integer", nullable: false),
                     model = table.Column<string>(type: "text", nullable: false),
                     color = table.Column<string>(type: "text", nullable: false),
                     identifier = table.Column<string>(type: "text", nullable: false),
@@ -86,13 +78,12 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     transport_id = table.Column<long>(type: "bigint", nullable: false),
-                    user_id = table.Column<long>(type: "bigint", nullable: false),
+                    account_id = table.Column<long>(type: "bigint", nullable: false),
                     time_start = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     time_end = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     price_of_unit = table.Column<double>(type: "double precision", nullable: false),
-                    price_type = table.Column<PriceType>(type: "price_type", nullable: false),
-                    final_price = table.Column<double>(type: "double precision", nullable: true),
-                    account_id = table.Column<long>(type: "bigint", nullable: false)
+                    price_type = table.Column<int>(type: "integer", nullable: false),
+                    final_price = table.Column<double>(type: "double precision", nullable: true)
                 },
                 constraints: table =>
                 {

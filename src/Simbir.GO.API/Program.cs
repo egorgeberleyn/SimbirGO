@@ -1,13 +1,15 @@
 using Simbir.GO.API;
 using Simbir.GO.Application;
 using Simbir.GO.Infrastructure;
+using Simbir.GO.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddPresentation()
     .AddApplication()
-    .AddInfrastructure(builder.Configuration);
+    .AddInfrastructure(builder.Configuration)
+    .AddShared();
 
 var app = builder.Build();
 {

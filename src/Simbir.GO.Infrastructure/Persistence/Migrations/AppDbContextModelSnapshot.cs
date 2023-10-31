@@ -4,9 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using Simbir.GO.Domain.Accounts.Enums;
-using Simbir.GO.Domain.Rents.Enums;
-using Simbir.GO.Domain.Transports.Enums;
 using Simbir.GO.Infrastructure.Persistence;
 
 #nullable disable
@@ -23,9 +20,6 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "7.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "price_type", new[] { "none", "minutes", "days" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "role", new[] { "none", "client", "admin" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "transport_type", new[] { "none", "car", "bike", "scooter", "all" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Simbir.GO.Application.Services.Common.RefreshToken", b =>
@@ -92,8 +86,8 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
                         .HasColumnType("bytea")
                         .HasColumnName("password_salt");
 
-                    b.Property<Role>("Role")
-                        .HasColumnType("role")
+                    b.Property<int>("Role")
+                        .HasColumnType("integer")
                         .HasColumnName("role");
 
                     b.Property<string>("Username")
@@ -128,8 +122,8 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
                         .HasColumnType("double precision")
                         .HasColumnName("price_of_unit");
 
-                    b.Property<PriceType>("PriceType")
-                        .HasColumnType("price_type")
+                    b.Property<int>("PriceType")
+                        .HasColumnType("integer")
                         .HasColumnName("price_type");
 
                     b.Property<DateTime?>("TimeEnd")
@@ -143,10 +137,6 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
                     b.Property<long>("TransportId")
                         .HasColumnType("bigint")
                         .HasColumnName("transport_id");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("user_id");
 
                     b.HasKey("Id")
                         .HasName("pk_rents");
@@ -204,8 +194,8 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("owner_id");
 
-                    b.Property<TransportType>("TransportType")
-                        .HasColumnType("transport_type")
+                    b.Property<int>("TransportType")
+                        .HasColumnType("integer")
                         .HasColumnName("transport_type");
 
                     b.HasKey("Id")

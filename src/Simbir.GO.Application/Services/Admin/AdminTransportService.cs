@@ -25,11 +25,20 @@ public class AdminTransportService : IAdminTransportService
     public async Task<Result<List<Transport>>> GetTransportsAsync(SelectTransportParams selectParams)
     {
         Specification<Transport> byCountFilterAndTypeSpec;
-        if(selectParams.TransportType.Equals(nameof(TransportType.All), StringComparison.OrdinalIgnoreCase))
-            byCountFilterAndTypeSpec = new ByCountFilterAndTypeSpec(selectParams.Start, selectParams.Count, 
-                selectParams.TransportType);
-        else
+        if (selectParams.TransportType.Equals(nameof(TransportType.All), StringComparison.OrdinalIgnoreCase))
+        {
             byCountFilterAndTypeSpec = new ByCountFilterAndTypeSpec(selectParams.Start, selectParams.Count);
+        }
+        else
+        {
+            var (_, isFailed, transportType, errors) = Transport.Validate(selectParams.TransportType);
+            if (isFailed)
+                return Result.Fail(errors);
+            
+            byCountFilterAndTypeSpec = new ByCountFilterAndTypeSpec(selectParams.Start, selectParams.Count, 
+                transportType);
+        }
+        
         return await _transportRepository.GetAllByAsync(byCountFilterAndTypeSpec);
     }
 

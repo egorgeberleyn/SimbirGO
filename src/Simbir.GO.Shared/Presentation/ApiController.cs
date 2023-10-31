@@ -17,7 +17,7 @@ public class ApiController : Controller
         if (statusStr is null)
             throw new ArgumentNullException(nameof(statusStr), "ErrorCode must have a code status value");
         
-        if(int.TryParse(statusStr, out var statusCode))
+        if(!int.TryParse(statusStr, out var statusCode))
             throw new InvalidCastException("ErrorCode must be of numeric type");
             
         return Problem(statusCode: statusCode, title: errors[0].Message);

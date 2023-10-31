@@ -34,7 +34,7 @@ public sealed class TransportService : ITransportService
 
     public async Task<Result<Success>> AddTransportAsync(AddTransportRequest request)
     {
-        if(_userContext.TryGetUserId(out var ownerId))
+        if(!_userContext.TryGetUserId(out var ownerId))
             return new NotFoundAccountError();
         
         var createdTransport = Transport.Create(ownerId, request.CanBeRented, request.TransportType, request.Model, 
@@ -50,7 +50,7 @@ public sealed class TransportService : ITransportService
 
     public async Task<Result<Success>> UpdateTransportAsync(long transportId, UpdateTransportRequest request)
     {
-        if(_userContext.TryGetUserId(out var ownerId))
+        if(!_userContext.TryGetUserId(out var ownerId))
             return new NotFoundAccountError();
         
         var transport = await _transportRepository.GetByIdAsync(transportId);
@@ -74,7 +74,7 @@ public sealed class TransportService : ITransportService
 
     public async Task<Result<Success>> DeleteTransportAsync(long transportId)
     {
-        if(_userContext.TryGetUserId(out var ownerId))
+        if(!_userContext.TryGetUserId(out var ownerId))
             return new NotFoundAccountError();
         
         var transport = await _transportRepository.GetByIdAsync(transportId);
