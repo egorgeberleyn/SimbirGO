@@ -22,7 +22,7 @@ namespace Simbir.GO.Infrastructure.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Simbir.GO.Application.Services.Common.RefreshToken", b =>
+            modelBuilder.Entity("Simbir.GO.Application.Services.Common.RevokedToken", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()

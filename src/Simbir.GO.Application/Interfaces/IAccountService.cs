@@ -11,5 +11,5 @@ public interface IAccountService
     Task<Result<AuthResult>> SignInAsync(SignInAccountRequest request);
     Task<Result<Success>> SignUpAsync(SignUpAccountRequest request);
     Task<Result<Success>> UpdateAccountAsync(UpdateAccountRequest request);
-    Task SignOutAsync();
+    Task<Result<Success>> SignOutAsync();
 }

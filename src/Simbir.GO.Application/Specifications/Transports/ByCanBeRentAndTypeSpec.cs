@@ -1,6 +1,5 @@
 ﻿using Simbir.GO.Domain.Transports;
 using Simbir.GO.Domain.Transports.Enums;
-using Simbir.GO.Domain.Transports.Services;
 using Simbir.GO.Shared.Persistence.Specifications;
 
 namespace Simbir.GO.Application.Specifications.Transports;

@@ -1,13 +1,12 @@
-﻿namespace Simbir.GO.Application.Services.Common;
+﻿using Simbir.GO.Shared.Entities;
 
-public record RefreshToken()
+namespace Simbir.GO.Application.Services.Common;
+
+public class RevokedToken : Entity
 {
-    public long Id { get; set; }
     public long UserId { get; set; }
     public string Token { get; set; } = null!;
     public string JwtId { get; set; } = null!;
-    public bool IsUsed { get; set; }
     public bool IsRevoked { get; set; }
     public DateTime AddedDate { get; set; }
-    public DateTime ExpiryDate { get; set; }
 }

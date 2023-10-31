@@ -5,14 +5,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Npgsql;
 using Simbir.GO.Application.Interfaces;
 using Simbir.GO.Application.Interfaces.Auth;
 using Simbir.GO.Application.Interfaces.Persistence;
 using Simbir.GO.Application.Interfaces.Persistence.Repositories;
-using Simbir.GO.Domain.Accounts.Enums;
-using Simbir.GO.Domain.Rents.Enums;
-using Simbir.GO.Domain.Transports.Enums;
 using Simbir.GO.Infrastructure.Auth;
 using Simbir.GO.Infrastructure.Auth.Utils;
 using Simbir.GO.Infrastructure.Persistence;
@@ -65,7 +61,7 @@ public static class DependencyInjection
             {
                 ValidateIssuer = true,
                 ValidateAudience = true,
-                ValidateLifetime = true,
+                ValidateLifetime = false,
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = jwtSettings.Issuer,
                 ValidAudience = jwtSettings.Audience,

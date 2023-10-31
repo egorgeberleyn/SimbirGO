@@ -1,4 +1,5 @@
 ﻿using FluentResults;
+using Microsoft.AspNetCore.Http;
 using Simbir.GO.Application.Contracts.Accounts;
 using Simbir.GO.Application.Interfaces;
 using Simbir.GO.Application.Interfaces.Auth;
@@ -16,18 +17,23 @@ public class AccountService : IAccountService
 {
     private readonly IAppDbContext _dbContext;
     private readonly IAccountRepository _accountRepository;
+    private readonly IRevokedTokenRepository _revokedTokenRepository;
     private readonly IUserContext _userContext;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly IHttpContextAccessor _contextAccessor;
 
     public AccountService(IAppDbContext dbContext, IAccountRepository accountRepository, IUserContext userContext, 
-        IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator)
+        IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator, IHttpContextAccessor contextAccessor, 
+        IRevokedTokenRepository revokedTokenRepository)
     {
         _dbContext = dbContext;
         _accountRepository = accountRepository;
         _userContext = userContext;
         _passwordHasher = passwordHasher;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _contextAccessor = contextAccessor;
+        _revokedTokenRepository = revokedTokenRepository;
     }
 
     public async Task<Result<Account>> GetCurrentAccountAsync()
@@ -50,8 +56,8 @@ public class AccountService : IAccountService
         if (!isSuccess)
             return new InvalidCredentialsError();
 
-        var tokenPair = await _jwtTokenGenerator.GenerateTokenPairAsync(account);
-        return new AuthResult(tokenPair.accessToken, tokenPair.refreshToken);
+        var accessToken = _jwtTokenGenerator.GenerateToken(account);
+        return new AuthResult(accessToken);
     }
 
     public async Task<Result<Success>> SignUpAsync(SignUpAccountRequest request)
@@ -90,8 +96,31 @@ public class AccountService : IAccountService
         return new Success($"Account [{updatedAccount.Value.Username}] updated");
     }
 
-    public Task SignOutAsync()
+    public async Task<Result<Success>> SignOutAsync()
     {
-        throw new NotImplementedException();
+        var tokenStr = _contextAccessor.HttpContext?.Request.Headers["Authorization"]
+            .ToString()
+            .Replace("Bearer ", string.Empty);
+
+        if (tokenStr is null)
+            return new UnauthorizedError();
+        
+        var jwtToken = _jwtTokenGenerator.ParseToken(tokenStr!);
+        
+        if(!_userContext.TryGetUserId(out var userId))
+            return Result.Fail(new NotFoundAccountError());
+
+        var revokedToken = new RevokedToken()
+        {
+            Token = tokenStr,
+            IsRevoked = true,
+            AddedDate = DateTime.UtcNow,
+            UserId = userId,
+            JwtId = jwtToken.Id
+        };
+
+        await _revokedTokenRepository.AddAsync(revokedToken);
+        await _dbContext.SaveChangesAsync();
+        return new Success("Sign out successfully");
     }
 }
