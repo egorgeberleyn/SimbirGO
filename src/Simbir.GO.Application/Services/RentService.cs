@@ -93,7 +93,7 @@ public class RentService : IRentService
         return transportRents;
     }
 
-    public async Task<Result<long>> StartRentAsync(long transportId, StartRentRequest request)
+    public async Task<Result<Success>> StartRentAsync(long transportId, StartRentRequest request)
     {
         if (!_currentUserContext.TryGetUserId(out var accountId))
             return new NotFoundAccountError();
@@ -113,10 +113,10 @@ public class RentService : IRentService
 
         await _rentRepository.AddAsync(startedRent.Value);
         await _dbContext.SaveChangesAsync();
-        return startedRent.Value.Id;
+        return new Success("Rent successfully started");
     }
 
-    public async Task<Result<long>> EndRentAsync(long rentId, EndRentRequest request)
+    public async Task<Result<Success>> EndRentAsync(long rentId, EndRentRequest request)
     {
         if (await _currentUserContext.GetUserAsync() is not {} account)
             return new NotFoundAccountError();
@@ -151,6 +151,6 @@ public class RentService : IRentService
         _accountRepository.Update(account);
         
         await _dbContext.SaveChangesAsync();
-        return endedRent.Id;
+        return new Success("Rent successfully ended");
     }
 }

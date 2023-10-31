@@ -10,8 +10,8 @@ public interface IAdminRentService
     Task<Result<List<Rent>>> GetUserRentHistoryAsync(long accountId);
     Task<Result<List<Rent>>> GetTransportRentHistoryAsync(long transportId);
     
-    Task<Result<long>> CreateRentAsync(CreateRentRequest request);
-    Task<Result<long>> AdminEndRentAsync(long rentId, AdminEndRentRequest request);
-    Task<Result<long>> UpdateRentAsync(long rentId, UpdateRentRequest request);
-    Task<Result<long>> DeleteRentAsync(long rentId);
+    Task<Result<Success>> CreateRentAsync(CreateRentRequest request);
+    Task<Result<Success>> AdminEndRentAsync(long rentId, AdminEndRentRequest request);
+    Task<Result<Success>> UpdateRentAsync(long rentId, UpdateRentRequest request);
+    Task<Result<Success>> DeleteRentAsync(long rentId);
 }

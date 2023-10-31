@@ -12,6 +12,6 @@ public interface IRentService
     Task<Result<List<Rent>>> GetMyRentHistoryAsync();
     Task<Result<List<Rent>>> GetTransportRentHistoryAsync(long transportId);
     
-    Task<Result<long>> StartRentAsync(long transportId, StartRentRequest request);
-    Task<Result<long>> EndRentAsync(long rentId, EndRentRequest request);
+    Task<Result<Success>> StartRentAsync(long transportId, StartRentRequest request);
+    Task<Result<Success>> EndRentAsync(long rentId, EndRentRequest request);
 }

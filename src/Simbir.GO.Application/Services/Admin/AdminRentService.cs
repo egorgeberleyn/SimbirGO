@@ -60,7 +60,7 @@ public class AdminRentService : IAdminRentService
         return transportRents;
     }
 
-    public async Task<Result<long>> CreateRentAsync(CreateRentRequest request)
+    public async Task<Result<Success>> CreateRentAsync(CreateRentRequest request)
     {
         var transport = await _transportRepository.GetByIdAsync(request.TransportId);
         if (transport is null)
@@ -73,10 +73,10 @@ public class AdminRentService : IAdminRentService
 
         await _rentRepository.AddAsync(startedRent.Value);
         await _dbContext.SaveChangesAsync();
-        return startedRent.Value.Id;
+        return new Success($"Rent started at {startedRent.Value.TimeStart}");
     }
 
-    public async Task<Result<long>> AdminEndRentAsync(long rentId, AdminEndRentRequest request)
+    public async Task<Result<Success>> AdminEndRentAsync(long rentId, AdminEndRentRequest request)
     {
         var rent = await _rentRepository.GetByIdAsync(rentId);
         if (rent is null)
@@ -98,10 +98,10 @@ public class AdminRentService : IAdminRentService
         
         _rentRepository.Update(endedRent);
         await _dbContext.SaveChangesAsync();
-        return endedRent.Id;
+        return new Success($"Rent ended at {endedRent.TimeEnd}");
     }
 
-    public async Task<Result<long>> UpdateRentAsync(long rentId, UpdateRentRequest request)
+    public async Task<Result<Success>> UpdateRentAsync(long rentId, UpdateRentRequest request)
     {
         var rent = await _rentRepository.GetByIdAsync(rentId);
         if (rent is null)
@@ -114,10 +114,10 @@ public class AdminRentService : IAdminRentService
         
         _rentRepository.Update(updatedRent.Value);
         await _dbContext.SaveChangesAsync();
-        return updatedRent.Value.Id;
+        return new Success("Rent updated");
     }
 
-    public async Task<Result<long>> DeleteRentAsync(long rentId)
+    public async Task<Result<Success>> DeleteRentAsync(long rentId)
     {
         var rent = await _rentRepository.GetByIdAsync(rentId);
         if (rent is null)
@@ -125,6 +125,6 @@ public class AdminRentService : IAdminRentService
         
         _rentRepository.Delete(rent);
         await _dbContext.SaveChangesAsync();
-        return rent.Id;
+        return new Success($"Rent deleted");
     }
 }

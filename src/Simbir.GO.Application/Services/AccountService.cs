@@ -67,7 +67,7 @@ public class AccountService : IAccountService
         
         await _accountRepository.AddAsync(createdAccount.Value);
         await _dbContext.SaveChangesAsync();
-        return new Success("Account created successfully");
+        return new Success("Account created");
     }
 
     public async Task<Result<Success>> UpdateAccountAsync(UpdateAccountRequest request)
@@ -87,7 +87,7 @@ public class AccountService : IAccountService
 
         _accountRepository.Update(updatedAccount.Value);
         await _dbContext.SaveChangesAsync();
-        return new Success($"Account [{updatedAccount.Value.Username}] successfully updated");
+        return new Success($"Account [{updatedAccount.Value.Username}] updated");
     }
 
     public Task SignOutAsync()

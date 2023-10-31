@@ -9,7 +9,7 @@ public interface IAdminAccountService
     Task<Result<List<Account>>> GetAccountsAsync(int start, int count);
     Task<Result<Account>> GetAccountAsync(long id);
 
-    Task<Result<long>> CreateAccountAsync(CreateAccountRequest request);
-    Task<Result<long>> UpdateAccountAsync(long id, AdminUpdateAccountRequest request);
-    Task<Result<long>> DeleteAccountAsync(long id);
+    Task<Result<Success>> CreateAccountAsync(CreateAccountRequest request);
+    Task<Result<Success>> UpdateAccountAsync(long id, AdminUpdateAccountRequest request);
+    Task<Result<Success>> DeleteAccountAsync(long id);
 }

@@ -32,7 +32,7 @@ public sealed class TransportService : ITransportService
             : Result.Ok(transport);
     }
 
-    public async Task<Result<long>> AddTransportAsync(AddTransportRequest request)
+    public async Task<Result<Success>> AddTransportAsync(AddTransportRequest request)
     {
         if(_currentUserContext.TryGetUserId(out var ownerId))
             return new NotFoundAccountError();
@@ -45,10 +45,10 @@ public sealed class TransportService : ITransportService
 
         await _transportRepository.AddAsync(createdTransport.Value);
         await _dbContext.SaveChangesAsync();
-        return createdTransport.Value.Id;
+        return new Success("Your transport successfully added");
     }
 
-    public async Task<Result<long>> UpdateTransportAsync(long transportId, UpdateTransportRequest request)
+    public async Task<Result<Success>> UpdateTransportAsync(long transportId, UpdateTransportRequest request)
     {
         if(_currentUserContext.TryGetUserId(out var ownerId))
             return new NotFoundAccountError();
@@ -69,10 +69,10 @@ public sealed class TransportService : ITransportService
 
         _transportRepository.Update(updatedTransport.Value);
         await _dbContext.SaveChangesAsync();
-        return updatedTransport.Value.Id;
+        return new Success("Your transport successfully updated");
     }
 
-    public async Task<Result<long>> DeleteTransportAsync(long transportId)
+    public async Task<Result<Success>> DeleteTransportAsync(long transportId)
     {
         if(_currentUserContext.TryGetUserId(out var ownerId))
             return new NotFoundAccountError();
@@ -87,6 +87,6 @@ public sealed class TransportService : ITransportService
         
         _transportRepository.Delete(transport);
         await _dbContext.SaveChangesAsync();
-        return transport.Id;
+        return new Success("Your transport successfully removed");
     }
 }

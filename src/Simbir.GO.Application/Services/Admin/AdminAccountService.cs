@@ -39,7 +39,7 @@ public class AdminAccountService : IAdminAccountService
             : account;
     }
 
-    public async Task<Result<long>> CreateAccountAsync(CreateAccountRequest request)
+    public async Task<Result<Success>> CreateAccountAsync(CreateAccountRequest request)
     {
         var usernameSpec = new ByUsernameSpec(request.Username);
         if (await _accountRepository.GetByAsync(usernameSpec) is not null)
@@ -54,10 +54,10 @@ public class AdminAccountService : IAdminAccountService
         
         await _accountRepository.AddAsync(createdAccount.Value);
         await _dbContext.SaveChangesAsync();
-        return createdAccount.Value.Id;
+        return new Success("Account created");
     }
 
-    public async Task<Result<long>> UpdateAccountAsync(long id, AdminUpdateAccountRequest request)
+    public async Task<Result<Success>> UpdateAccountAsync(long id, AdminUpdateAccountRequest request)
     {
         var account = await _accountRepository.GetByIdAsync(id);
         if(account is null)
@@ -75,10 +75,10 @@ public class AdminAccountService : IAdminAccountService
 
         _accountRepository.Update(updatedAccount.Value);
         await _dbContext.SaveChangesAsync();
-        return updatedAccount.Value.Id;
+        return new Success($"Account [{updatedAccount.Value.Username}] updated");
     }
 
-    public async Task<Result<long>> DeleteAccountAsync(long id)
+    public async Task<Result<Success>> DeleteAccountAsync(long id)
     {
         var account = await _accountRepository.GetByIdAsync(id);
         if(account is null)
@@ -86,6 +86,6 @@ public class AdminAccountService : IAdminAccountService
         
         _accountRepository.Delete(account);
         await _dbContext.SaveChangesAsync();
-        return account.Id;
+        return new Success($"Account [{account.Username}] deleted");
     }
 }

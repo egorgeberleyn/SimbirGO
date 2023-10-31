@@ -42,7 +42,7 @@ public class AdminTransportService : IAdminTransportService
         return transport;
     }
 
-    public async Task<Result<long>> CreateTransportAsync(CreateTransportRequest request)
+    public async Task<Result<Success>> CreateTransportAsync(CreateTransportRequest request)
     {
         var createdTransport = Transport.Create(request.OwnerId, request.CanBeRented, request.TransportType,
             request.Model, request.Color, request.Identifier, request.Description, 
@@ -52,10 +52,10 @@ public class AdminTransportService : IAdminTransportService
 
         await _transportRepository.AddAsync(createdTransport.Value);
         await _dbContext.SaveChangesAsync();
-        return createdTransport.Value.Id;
+        return new Success($"Transport with identifier [{createdTransport.Value.Identifier}] created");
     }
 
-    public async Task<Result<long>> UpdateTransportAsync(long id, AdminUpdateTransportRequest request)
+    public async Task<Result<Success>> UpdateTransportAsync(long id, AdminUpdateTransportRequest request)
     {
         var transport = await _transportRepository.GetByIdAsync(id);
         if (transport is null)
@@ -63,14 +63,14 @@ public class AdminTransportService : IAdminTransportService
 
         var updatedTransport = transport.Update(request.CanBeRented, request.TransportType,
             request.Model, request.Color, request.Identifier, request.Description,
-            request.MinutePrice, request.DayPrice, request.Latitude, request.Longitude);
+            request.MinutePrice, request.DayPrice, request.Latitude, request.Longitude, request.OwnerId);
         
        _transportRepository.Update(updatedTransport.Value);
         await _dbContext.SaveChangesAsync();
-        return updatedTransport.Value.Id;
+        return new Success($"Transport with identifier [{updatedTransport.Value.Identifier}] updated");
     }
 
-    public async Task<Result<long>> DeleteTransportAsync(long id)
+    public async Task<Result<Success>> DeleteTransportAsync(long id)
     {
         var transport = await _transportRepository.GetByIdAsync(id);
         if (transport is null)
@@ -78,6 +78,6 @@ public class AdminTransportService : IAdminTransportService
         
         _transportRepository.Delete(transport);
         await _dbContext.SaveChangesAsync();
-        return transport.Id;
+        return new Success($"Transport with identifier [{transport.Identifier}] deleted");
     }
 }

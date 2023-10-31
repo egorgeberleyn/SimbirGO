@@ -4,7 +4,7 @@ public record UpdateRentRequest(
     long TransportId,
     long UserId,
     string TimeStart,
-    string TimeEnd,
+    string? TimeEnd,
     double PriceOfUnit,
     string PriceType,
-    double FinalPrice);
+    double? FinalPrice);

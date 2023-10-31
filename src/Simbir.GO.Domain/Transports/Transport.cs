@@ -20,7 +20,7 @@ public class Transport : Entity
     public Coordinate Coordinate { get; private set; }
     
     private Transport(long ownerId, bool canBeRented, TransportType transportType, string model, string color, 
-        string identifier, string description, double? minutePrice, double? dayPrice, Coordinate coordinate)
+        string identifier, string? description, double? minutePrice, double? dayPrice, Coordinate coordinate)
     {
         OwnerId = ownerId;
         CanBeRented = canBeRented;
@@ -35,7 +35,7 @@ public class Transport : Entity
     }
 
     public static Result<Transport> Create(long ownerId, bool canBeRented, string type, string model, string color,
-        string identifier, string description, double? minutePrice, double? dayPrice, double latitude, double longitude)
+        string identifier, string? description, double? minutePrice, double? dayPrice, double latitude, double longitude)
     {
         var (_, isFailed, transportType, errors) = Validate(type);
         if (isFailed)
@@ -49,8 +49,9 @@ public class Transport : Entity
             description, minutePrice, dayPrice, newCoordinate.Value);
     }
     
-    public Result<Transport> Update(bool canBeRented, string type, string model, string color,
-        string identifier, string description, double? minutePrice, double? dayPrice, double latitude, double longitude)
+    public Result<Transport> Update(bool canBeRented, string type, string model, string color, string identifier, 
+        string? description, double? minutePrice, double? dayPrice, 
+        double latitude, double longitude, long ownerId = default)
     {
         var (_, isFailed, transportType, errors) = Validate(type);
         if (isFailed)
@@ -60,6 +61,9 @@ public class Transport : Entity
         if (newCoordinate.IsFailed)
             return Result.Fail(newCoordinate.Errors);
 
+        if(ownerId != default)
+            OwnerId = ownerId;
+        
         CanBeRented = canBeRented;
         TransportType = transportType;
         Model = model;
