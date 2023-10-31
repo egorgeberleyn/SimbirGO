@@ -27,7 +27,7 @@ public class AdminRentController : ApiController
     {
         var result = await _adminRentService.GetRentByIdAsync(id);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };
@@ -43,7 +43,7 @@ public class AdminRentController : ApiController
     {
         var result = await _adminRentService.GetUserRentHistoryAsync(userId);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };
@@ -75,7 +75,7 @@ public class AdminRentController : ApiController
     {
         var result = await _adminRentService.CreateRentAsync(request);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };
@@ -92,7 +92,7 @@ public class AdminRentController : ApiController
     {
         var result = await _adminRentService.AdminEndRentAsync(id, request);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };
@@ -109,7 +109,7 @@ public class AdminRentController : ApiController
     {
         var result = await _adminRentService.UpdateRentAsync(id, request);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };
@@ -125,7 +125,7 @@ public class AdminRentController : ApiController
     {
         var result = await _adminRentService.DeleteRentAsync(id);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };

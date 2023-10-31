@@ -25,7 +25,7 @@ public class AccountController : ApiController
     {
         var result = await _accountService.GetCurrentAccountAsync();
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };
@@ -42,7 +42,7 @@ public class AccountController : ApiController
     {
         var authResult = await _accountService.SignInAsync(request);
         return authResult switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(authResult.Errors),
             { IsSuccess: true } => Ok(authResult.Value),
             _ => NoContent()
         };
@@ -59,7 +59,7 @@ public class AccountController : ApiController
     {
         var authResult = await _accountService.SignUpAsync(request);
         return authResult switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(authResult.Errors),
             { IsSuccess: true } => Ok(authResult.Value),
             _ => NoContent()
         };
@@ -82,11 +82,11 @@ public class AccountController : ApiController
     /// <param name="request"></param>
     /// <returns></returns>
     [HttpPut("Update")]
-    public new async Task<IActionResult> Update(UpdateAccountRequest request)
+    public async Task<IActionResult> Update(UpdateAccountRequest request)
     {
         var updateAccountResult = await _accountService.UpdateAccountAsync(request);
         return updateAccountResult switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(updateAccountResult.Errors),
             { IsSuccess: true } => Ok(updateAccountResult.Value),
             _ => NoContent()
         };

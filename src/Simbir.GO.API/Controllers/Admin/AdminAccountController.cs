@@ -28,7 +28,7 @@ public class AdminAccountController : ApiController
     {
         var result = await _adminAccountService.GetAccountsAsync(start, count);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };
@@ -44,7 +44,7 @@ public class AdminAccountController : ApiController
     {
         var result = await _adminAccountService.GetAccountAsync(id);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };
@@ -60,7 +60,7 @@ public class AdminAccountController : ApiController
     {
         var result = await _adminAccountService.CreateAccountAsync(request);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };
@@ -77,7 +77,7 @@ public class AdminAccountController : ApiController
     {
         var result = await _adminAccountService.UpdateAccountAsync(id, request);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };
@@ -93,7 +93,7 @@ public class AdminAccountController : ApiController
     {
         var result = await _adminAccountService.DeleteAccountAsync(id);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };

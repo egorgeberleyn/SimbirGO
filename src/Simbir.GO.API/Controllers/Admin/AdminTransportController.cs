@@ -27,7 +27,7 @@ public class AdminTransportController : ApiController
     {
         var result = await _adminTransportService.GetTransportsAsync(@params);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };
@@ -43,7 +43,7 @@ public class AdminTransportController : ApiController
     {
         var result = await _adminTransportService.GetTransportAsync(id);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };
@@ -59,7 +59,7 @@ public class AdminTransportController : ApiController
     {
         var result = await _adminTransportService.CreateTransportAsync(request);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };
@@ -76,7 +76,7 @@ public class AdminTransportController : ApiController
     {
         var result = await _adminTransportService.UpdateTransportAsync(id, request);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };
@@ -92,7 +92,7 @@ public class AdminTransportController : ApiController
     {
         var result = await _adminTransportService.DeleteTransportAsync(id);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };

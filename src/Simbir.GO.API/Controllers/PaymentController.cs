@@ -23,7 +23,7 @@ public class PaymentController : ApiController
     {
         var result = await _paymentService.PaymentHesoyamAsync(accountId);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };

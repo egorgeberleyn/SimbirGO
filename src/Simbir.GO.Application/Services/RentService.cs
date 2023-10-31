@@ -19,19 +19,19 @@ namespace Simbir.GO.Application.Services;
 public class RentService : IRentService
 {
     private readonly IAppDbContext _dbContext;
-    private readonly ICurrentUserContext _currentUserContext;
+    private readonly IUserContext _userContext;
     private readonly IRentRepository _rentRepository;
     private readonly ITransportRepository _transportRepository;
     private readonly IAccountRepository _accountRepository;
     private readonly LocationFinder _locationFinder;
    
 
-    public RentService(IRentRepository rentRepository, ICurrentUserContext currentUserContext, 
+    public RentService(IRentRepository rentRepository, IUserContext userContext, 
         ITransportRepository transportRepository, IAppDbContext dbContext, LocationFinder locationFinder, 
         IAccountRepository accountRepository)
     {
         _rentRepository = rentRepository;
-        _currentUserContext = currentUserContext;
+        _userContext = userContext;
         _transportRepository = transportRepository;
         _dbContext = dbContext;
         _locationFinder = locationFinder;
@@ -47,7 +47,7 @@ public class RentService : IRentService
 
     public async Task<Result<Rent>> GetRentByIdAsync(long rentId)
     {
-        if(_currentUserContext.TryGetUserId(out var userId))
+        if(_userContext.TryGetUserId(out var userId))
             return new NotFoundAccountError();
         
         var rent = await _rentRepository.GetByIdAsync(rentId);
@@ -66,7 +66,7 @@ public class RentService : IRentService
 
     public async Task<Result<List<Rent>>> GetMyRentHistoryAsync()
     {
-        if(_currentUserContext.TryGetUserId(out var userId))
+        if(_userContext.TryGetUserId(out var userId))
             return new NotFoundAccountError();
 
         var byAccountSpec = new ByAccountSpec(userId);
@@ -77,7 +77,7 @@ public class RentService : IRentService
 
     public async Task<Result<List<Rent>>> GetTransportRentHistoryAsync(long transportId)
     {
-        if(_currentUserContext.TryGetUserId(out var userId))
+        if(_userContext.TryGetUserId(out var userId))
             return new NotFoundAccountError();
         
         var transport = await _transportRepository.GetByIdAsync(transportId);
@@ -95,7 +95,7 @@ public class RentService : IRentService
 
     public async Task<Result<Success>> StartRentAsync(long transportId, StartRentRequest request)
     {
-        if (!_currentUserContext.TryGetUserId(out var accountId))
+        if (!_userContext.TryGetUserId(out var accountId))
             return new NotFoundAccountError();
         
         var transport = await _transportRepository.GetByIdAsync(transportId);
@@ -118,7 +118,7 @@ public class RentService : IRentService
 
     public async Task<Result<Success>> EndRentAsync(long rentId, EndRentRequest request)
     {
-        if (await _currentUserContext.GetUserAsync() is not {} account)
+        if (await _userContext.GetUserAsync() is not {} account)
             return new NotFoundAccountError();
         
         var rent = await _rentRepository.GetByIdAsync(rentId);

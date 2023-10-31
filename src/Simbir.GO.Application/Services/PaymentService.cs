@@ -11,15 +11,15 @@ namespace Simbir.GO.Application.Services;
 public class PaymentService : IPaymentService
 {
     private readonly IAppDbContext _dbContext;
-    private readonly ICurrentUserContext _currentUserContext;
+    private readonly IUserContext _userContext;
     private readonly IAccountRepository _accountRepository;
 
     public PaymentService(IAccountRepository accountRepository, IAppDbContext dbContext, 
-        ICurrentUserContext currentUserContext)
+        IUserContext userContext)
     {
         _accountRepository = accountRepository;
         _dbContext = dbContext;
-        _currentUserContext = currentUserContext;
+        _userContext = userContext;
     }
 
     public async Task<Result<Success>> PaymentHesoyamAsync(long accountId)
@@ -28,7 +28,7 @@ public class PaymentService : IPaymentService
         if (account is null)
             return new NotFoundAccountError();
 
-        if (await _currentUserContext.GetUserAsync() is not { } currentUser)
+        if (await _userContext.GetUserAsync() is not { } currentUser)
             return new NotFoundAccountError();
 
         if (currentUser.Role == Role.Client && accountId != currentUser.Id)

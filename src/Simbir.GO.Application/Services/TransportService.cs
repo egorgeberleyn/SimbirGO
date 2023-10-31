@@ -14,14 +14,14 @@ public sealed class TransportService : ITransportService
 {
     private readonly ITransportRepository _transportRepository;
     private readonly IAppDbContext _dbContext;
-    private readonly ICurrentUserContext _currentUserContext;
+    private readonly IUserContext _userContext;
 
     public TransportService(ITransportRepository transportRepository, IAppDbContext dbContext, 
-        ICurrentUserContext currentUserContext)
+        IUserContext userContext)
     {
         _transportRepository = transportRepository;
         _dbContext = dbContext;
-        _currentUserContext = currentUserContext;
+        _userContext = userContext;
     }
 
     public async Task<Result<Transport>> GetTransportByIdAsync(long transportId)
@@ -34,7 +34,7 @@ public sealed class TransportService : ITransportService
 
     public async Task<Result<Success>> AddTransportAsync(AddTransportRequest request)
     {
-        if(_currentUserContext.TryGetUserId(out var ownerId))
+        if(_userContext.TryGetUserId(out var ownerId))
             return new NotFoundAccountError();
         
         var createdTransport = Transport.Create(ownerId, request.CanBeRented, request.TransportType, request.Model, 
@@ -50,7 +50,7 @@ public sealed class TransportService : ITransportService
 
     public async Task<Result<Success>> UpdateTransportAsync(long transportId, UpdateTransportRequest request)
     {
-        if(_currentUserContext.TryGetUserId(out var ownerId))
+        if(_userContext.TryGetUserId(out var ownerId))
             return new NotFoundAccountError();
         
         var transport = await _transportRepository.GetByIdAsync(transportId);
@@ -74,7 +74,7 @@ public sealed class TransportService : ITransportService
 
     public async Task<Result<Success>> DeleteTransportAsync(long transportId)
     {
-        if(_currentUserContext.TryGetUserId(out var ownerId))
+        if(_userContext.TryGetUserId(out var ownerId))
             return new NotFoundAccountError();
         
         var transport = await _transportRepository.GetByIdAsync(transportId);

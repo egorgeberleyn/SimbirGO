@@ -3,6 +3,7 @@
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
     <ItemGroup>
+      <PackageReference Include="FluentResults" Version="3.15.2" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.12">
           <PrivateAssets>all</PrivateAssets>
       </PackageReference>

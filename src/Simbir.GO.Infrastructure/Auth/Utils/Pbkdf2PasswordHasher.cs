@@ -4,7 +4,7 @@ using Simbir.GO.Application.Interfaces.Auth;
 
 namespace Simbir.GO.Infrastructure.Auth.Utils;
 
-public class PasswordHasher : IPasswordHasher
+public class Pbkdf2PasswordHasher : IPasswordHasher
 {
     private const int KeySize = 64;
     private const int Iterations = 350000;

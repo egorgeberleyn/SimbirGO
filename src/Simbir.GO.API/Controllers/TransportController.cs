@@ -27,7 +27,7 @@ public class TransportController : ApiController
     {
         var result = await _transportService.GetTransportByIdAsync(id);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };
@@ -43,7 +43,7 @@ public class TransportController : ApiController
     {
         var result = await _transportService.AddTransportAsync(request);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };
@@ -60,7 +60,7 @@ public class TransportController : ApiController
     {
         var result = await _transportService.UpdateTransportAsync(id, request);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };
@@ -76,7 +76,7 @@ public class TransportController : ApiController
     {
         var result = await _transportService.DeleteTransportAsync(id);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };

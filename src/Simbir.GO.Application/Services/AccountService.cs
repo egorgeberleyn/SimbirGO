@@ -16,23 +16,23 @@ public class AccountService : IAccountService
 {
     private readonly IAppDbContext _dbContext;
     private readonly IAccountRepository _accountRepository;
-    private readonly ICurrentUserContext _currentUserContext;
+    private readonly IUserContext _userContext;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
-    public AccountService(IAppDbContext dbContext, IAccountRepository accountRepository, ICurrentUserContext currentUserContext, 
+    public AccountService(IAppDbContext dbContext, IAccountRepository accountRepository, IUserContext userContext, 
         IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator)
     {
         _dbContext = dbContext;
         _accountRepository = accountRepository;
-        _currentUserContext = currentUserContext;
+        _userContext = userContext;
         _passwordHasher = passwordHasher;
         _jwtTokenGenerator = jwtTokenGenerator;
     }
 
     public async Task<Result<Account>> GetCurrentAccountAsync()
     {
-        var account = await _currentUserContext.GetUserAsync();
+        var account = await _userContext.GetUserAsync();
         if (account is null)
             return new NotFoundAccountError();
         return account;
@@ -76,7 +76,7 @@ public class AccountService : IAccountService
         if (await _accountRepository.GetByAsync(usernameSpec) is not null)
             return new AlreadyExistsAccountError(request.Username);
         
-        var currentAccount = await _currentUserContext.GetUserAsync();
+        var currentAccount = await _userContext.GetUserAsync();
         if (currentAccount is null)
             return new NotFoundAccountError();
         

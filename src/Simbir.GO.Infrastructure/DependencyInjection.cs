@@ -49,10 +49,7 @@ public static class DependencyInjection
         {
             options.UseNpgsql(dataSource);
         });
-        
-        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-        //services.AddScoped<DbContext, AppDbContext>();
-        
+
         services.AddScoped<ITransportRepository, TransportRepository>();
         services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddScoped<IRentRepository, RentRepository>();
@@ -83,8 +80,8 @@ public static class DependencyInjection
             });
 
         services.AddHttpContextAccessor();
-        services.AddScoped<ICurrentUserContext, CurrentUserContext>();
-        services.AddSingleton<IPasswordHasher, PasswordHasher>();
+        services.AddScoped<IUserContext, CurrentUserContext>();
+        services.AddSingleton<IPasswordHasher, Pbkdf2PasswordHasher>();
 
         return services;
     }

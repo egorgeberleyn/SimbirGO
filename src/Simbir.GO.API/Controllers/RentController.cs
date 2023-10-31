@@ -27,7 +27,7 @@ public class RentController : ApiController
     {
         var result = await _rentService.GetRentalTransportAsync(@params);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };
@@ -43,7 +43,7 @@ public class RentController : ApiController
     {
         var result = await _rentService.GetRentByIdAsync(rentId);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };
@@ -58,7 +58,7 @@ public class RentController : ApiController
     {
         var result = await _rentService.GetMyRentHistoryAsync();
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };
@@ -74,7 +74,7 @@ public class RentController : ApiController
     {
         var result = await _rentService.GetTransportRentHistoryAsync(transportId);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };
@@ -91,7 +91,7 @@ public class RentController : ApiController
     {
         var result = await _rentService.StartRentAsync(transportId, request);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };
@@ -108,7 +108,7 @@ public class RentController : ApiController
     {
         var result = await _rentService.EndRentAsync(rentId, request);
         return result switch {
-            { IsFailed: true } => Problem(),
+            { IsFailed: true } => Problem(result.Errors),
             { IsSuccess: true } => Ok(result.Value),
             _ => NoContent()
         };

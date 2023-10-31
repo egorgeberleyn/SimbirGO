@@ -6,7 +6,7 @@ using Simbir.GO.Domain.Accounts;
 
 namespace Simbir.GO.Infrastructure.Auth.Utils;
 
-public class CurrentUserContext : ICurrentUserContext
+public class CurrentUserContext : IUserContext
 {
     private readonly IHttpContextAccessor _contextAccessor;
     private readonly IAccountRepository _accountRepository;
