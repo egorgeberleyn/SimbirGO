@@ -8,12 +8,15 @@ namespace Simbir.GO.Infrastructure.Persistence;
 
 public class SeedData
 {
+    private const string AdminPassword = "secret";
+    private const string ClientPassword = "123456";
+    
     public static async Task SeedAsync(AppDbContext context, IPasswordHasher passwordHasher)
     {
         if (context.Accounts.Any()) return;
 
-        var (adminHash, adminSalt) = passwordHasher.HashPassword("secret");
-        var (clientHash, clientSalt) = passwordHasher.HashPassword("123456");
+        var (adminHash, adminSalt) = passwordHasher.HashPassword(AdminPassword);
+        var (clientHash, clientSalt) = passwordHasher.HashPassword(ClientPassword);
 
         var accounts = new List<Account>
         {
