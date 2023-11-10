@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <ItemGroup>
+      <ProjectReference Include="..\Simbir.GO.Domain\Simbir.GO.Domain.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.1" />
+    </ItemGroup>
+
+</Project>
