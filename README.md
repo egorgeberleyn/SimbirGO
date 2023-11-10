@@ -37,14 +37,18 @@
 
 #### Запуск
 1. Поменяйте строку подключения к бд
- "ConnectionStrings": {
+ ```json
+"ConnectionStrings": {
     "Postgres": "Host=localhost;Port=5432;Database=simbir-go-db;Username=postgres;Password=password"
   },
+ ```
 2.  Запустите проект
 3.  Swagger URL: https://localhost:7151/swagger/index.html
 
 #### Секреты для админа
-1. {
+1. ```json
+   {
     "Username": "Admin",
     "Password": "secret"
-  },
+   }
+   ```
