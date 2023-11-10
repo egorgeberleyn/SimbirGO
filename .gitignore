@@ -277,6 +277,4 @@ FakesAssemblies/
 /dataSources.local.xml
 
 # Custom files and directories
-/RemoteConfig.Server/RemoteConfig.API/Logs/
-/pgdata/
-.env
+
